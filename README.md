@@ -18,3 +18,6 @@ More info coming soon, this is in very very early alpha. If you want to get invo
 - [ ] Built-in SEO settings
 - [ ] Social login/register
 - [ ] Keep state in browser when returning to certain pages (possibly in URL, maybe in localstorage)
+- [ ] Some sort of help screens (overlay on each screen illustrastrating how to use) on first use. Interactive tutorial
+- [ ] Create videos for website
+- [ ] Redesign yetijs.com to include new UI and some more details
