@@ -6,3 +6,15 @@
 More info coming soon, this is in very very early alpha. If you want to get involved just let me know.
 
 [YetiJS](http://yetijs.com)
+
+# Todo
+- [ ] Unit/Integration tests
+- [ ] Theming
+- [ ] Plugins
+- [ ] Error handling throughout
+- [ ] Backup/restore within admin panel
+- [ ] CLI for first install/setup
+- [ ] Settings page in admin panel
+- [ ] Built-in SEO settings
+- [ ] Social login/register
+- [ ] Keep state in browser when returning to certain pages (possibly in URL, maybe in localstorage)
