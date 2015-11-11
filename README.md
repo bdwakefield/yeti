@@ -2,6 +2,7 @@
 # YetiJS - A NodeJS CMS 
 [![Build Status](https://travis-ci.org/Enmadaio/yeti.svg?branch=develop)](https://travis-ci.org/Enmadaio/yeti)
 [![Coverage Status](https://coveralls.io/repos/Enmadaio/yeti/badge.svg?branch=master&service=github)](https://coveralls.io/github/Enmadaio/yeti?branch=master)
+[![David Dependencies](https://david-dm.org/enmadaio/yeti.svg)](https://david-dm.org/enmadaio/yeti.svg)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Enmadaio/yeti?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 
 More info coming soon, this is in very very early alpha. If you want to get involved just let me know.
