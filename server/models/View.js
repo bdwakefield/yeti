@@ -10,16 +10,15 @@ var Q = require('q');
 var _ = require('lodash');
 
 View.getView = function(view) {
-    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     if (view) {
         var cachedView = cache.get(view);
 
         if (cachedView) {
-            deferred.resolve(cachedView);
+            return Q(cachedView);
         } else {
-            View.findOne({"_id": ObjectId(view)}).lean().exec(function (err, result) {
+            return View.findOne({"_id": ObjectId(view)}).lean().exec(function (err, result) {
                 if (err) console.log(err);
 
                 var bodyContent = {
@@ -32,41 +31,34 @@ View.getView = function(view) {
                     bodyContent.id = view;
 
                     cache.set(view, bodyContent);
-                    deferred.resolve(bodyContent);
+                    return bodyContent;
                 });
             });
         }
     } else {
-        deferred.resolve({body:{content:'No default view or view does not exist.'}});
+        return Q({body:{content:'No default view or view does not exist.'}});
     }
-
-    return deferred.promise;
 };
 
 View.getDefaultViewId = function() {
-    var deferred = Q.defer();
-
     var cachedViewId = cache.get('defaultViewId');
 
     if (cachedViewId) {
-        deferred.resolve(cachedViewId);
+        return Q(cachedViewId);
     } else {
-        View.findOne({
+        return View.findOne({
             default: true
         }).lean().exec(function (err, result) {
             if (err) console.log(err);
 
-
             if (result) {
                 cache.set('defaultViewId', result._id);
-                deferred.resolve(result._id);
+                return result._id;
             } else {
-                deferred.resolve();
+                return null;
             }
         });
     }
-
-    return deferred.promise;
 };
 
 View.getViewForEdit = function(view) {
@@ -89,25 +81,20 @@ View.getViewsForEdit = function() {
 };
 
 View.postView = function(viewId, viewContent, viewRoute, viewIsDefault) {
-    var deferred = Q.defer();
-
-    clearAllDefaultViews(viewIsDefault).then(function() {
-        updateView(viewId, viewContent, viewRoute, viewIsDefault).then(function() {
+    return clearAllDefaultViews(viewIsDefault).then(function() {
+        return updateView(viewId, viewContent, viewRoute, viewIsDefault).then(function() {
             cache.flush();
-            deferred.resolve(204);
-
-            Q.resolve();
+            return 204;
         });
     });
-
-    return deferred.promise;
 };
 
 View.addView = function(viewName) {
     var view = new View({
         title: viewName,
         route: '/' + viewName,
-        content: ''
+        content: '',
+        default: false
     });
     return view.save();
 };
