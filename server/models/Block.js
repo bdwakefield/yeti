@@ -130,8 +130,6 @@ Block.deleteBlock = function(blockId) {
     Block.find({_id:blockId}).remove().then(function(result) {
         cache.flush();
         deferred.resolve(result);
-    }).catch(function(err) {
-        console.log(err);
     });
 
     return deferred.promise;

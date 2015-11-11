@@ -1,12 +1,28 @@
 var assert = require('assert');
 var View = require('../../../server/models/View');
+var Block = require('../../../server/models/Block');
 
 describe('View Model Tests', function() {
     var _viewId;
+    var _blockId;
+
+    before(function(done) {
+        Block.addBlock('Test Block', 'content').then(function(result) {
+            _blockId = result._doc._id;
+            done();
+        });
+    });
+
+    after(function(done) {
+        Block.deleteBlock(_blockId).then(function() {
+            done();
+        });
+    });
+
     beforeEach(function(done) {
         View.addView(new Date().getTime()).then(function(result) {
             _viewId = result._doc._id;
-            View.postView(_viewId, '{{1}}', '/test', false).then(function() {
+            View.postView(_viewId, '{{-' + _blockId + '}}', '/test', false).then(function() {
                 done();
             });
         });
