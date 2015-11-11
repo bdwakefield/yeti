@@ -70,36 +70,22 @@ View.getDefaultViewId = function() {
 };
 
 View.getViewForEdit = function(view) {
-    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
-    View.findOne({_id:ObjectId(view)}, function(err, result) {
-        var bodyContent = result[0].content;
-        if (err) console.log(err);
-
-        deferred.resolve(bodyContent);
-    });
-
-    return deferred.promise;
+    return View.findOne({_id:ObjectId(view)}).lean().exec();
 };
 
 View.getViewsForEdit = function() {
-    var deferred = Q.defer();
-
-        View.find({}, function(err, result) {
-            if (err) console.log(err);
-
-            deferred.resolve(_.map(result, function(view) {
-                return {
-                    id: view._id,
-                    content: view.content || '<h1>Please add a block to get started with this view.</h1>',
-                    defaultView: view.default,
-                    title: view.title,
-                    route: view.route
-                };
-            }));
+    return View.find({}).lean().exec().then(function(result) {
+        return _.map(result, function(view) {
+            return {
+                id: view._id,
+                content: view.content || '<h1>Please add a block to get started with this view.</h1>',
+                defaultView: view.default,
+                title: view.title,
+                route: view.route
+            };
         });
-
-    return deferred.promise;
+    });
 };
 
 View.postView = function(viewId, viewContent, viewRoute, viewIsDefault) {
@@ -118,32 +104,19 @@ View.postView = function(viewId, viewContent, viewRoute, viewIsDefault) {
 };
 
 View.addView = function(viewName) {
-    var deferred = Q.defer();
-
     var view = new View({
         title: viewName,
         route: '/' + viewName,
         content: ''
     });
-    view.save(function(err) {
-        if (err) deferred.reject(err);
-        deferred.resolve(view);
-    });
-
-    return deferred.promise;
+    return view.save();
 };
 
 View.deleteView = function(viewId) {
-    var deferred = Q.defer();
-
-    View.find({_id:viewId}).remove().then(function(result) {
+    return View.find({_id:viewId}).remove().then(function(result) {
         cache.flush();
-        deferred.resolve(result);
-    }).catch(function(err) {
-        console.log(err);
+        return result;
     });
-
-    return deferred.promise;
 };
 
 View.getRoutes = function() {
@@ -204,7 +177,7 @@ function parseView(content) {
             promises.push(innerDeferred.promise);
         });
 
-        Q.all(promises).then(function (promise) {
+        Q.all(promises).then(function () {
             deferred.resolve(content);
         });
     } else {
