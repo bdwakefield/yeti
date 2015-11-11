@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "dependencies": {
     "bcrypt": "^0.8.3",
