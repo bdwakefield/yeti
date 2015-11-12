@@ -9,35 +9,30 @@ var Q = require('q');
 var _ = require('lodash');
 
 Scripts.getAllScripts = function() {
-    var deferred = Q.defer();
-
     var cachedScripts = cache.get('allScripts');
 
     if (cachedScripts) {
-        deferred.resolve(cachedScripts);
+        return Q(cachedScripts);
     } else {
-        Scripts.find().lean().exec(function (err, scripts) {
+        return Scripts.find().lean().exec(function (err, scripts) {
             if (err) return err;
 
             cache.set('allScripts', scripts);
-            deferred.resolve(scripts);
+            return scripts;
         });
     }
-
-    return deferred.promise;
 };
 
 Scripts.getScript = function(script) {
-    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     var cachedScripts = cache.get(script);
 
     if (cachedScripts) {
-        deferred.resolve(cachedScripts);
+        return Q(cachedScripts);
     } else {
-        Scripts.findOne({"_id": ObjectId(script)}, function (err, result) {
-            if (err) deferred.reject(err);
+        return Scripts.findOne({"_id": ObjectId(script)}, function (err, result) {
+            if (err) return Q.reject(err);
 
             var bodyContent = result || {body: {content: '<h3>Script ' + script + ' is missing.</h3>'}};
             var cachedScript = _.find(cache.get('allScripts'), {'_id': ObjectId(script)});
@@ -45,17 +40,13 @@ Scripts.getScript = function(script) {
             bodyContent.enabled = _.result(cachedScript, 'enabled');
 
             cache.set(script, bodyContent);
-            deferred.resolve(bodyContent);
+            return bodyContent;
         });
     }
-
-    return deferred.promise;
 };
 
 Scripts.postScript = function(enabled, scriptId, scriptContent, scriptType) {
-    var deferred = Q.defer();
-
-    Scripts.findOneAndUpdate({
+    return Scripts.findOneAndUpdate({
         _id: scriptId
     },{
         $set: {
@@ -67,45 +58,29 @@ Scripts.postScript = function(enabled, scriptId, scriptContent, scriptType) {
         safe: true,
         upsert: true,
         new: true
-    }, function(err, result){
-        if (err) deferred.reject(err);
-
-        cache.flush();
-        deferred.resolve(204);
     });
-    return deferred.promise;
 };
 
 Scripts.addScript = function(scriptType, scriptName) {
-    var deferred = Q.defer();
-
     var scripts = new Scripts({
         enabled: true,
         type: scriptType,
         title: scriptName,
         content: ''
     });
-    scripts.save(function(err) {
-        if (err) deferred.reject(err);
+    return scripts.save(function(err) {
+        if (err) return Q.reject(err);
 
         cache.flush();
-        deferred.resolve(scripts);
+        return scripts;
     });
-
-    return deferred.promise;
 };
 
 Scripts.deleteScript = function(scriptId) {
-    var deferred = Q.defer();
-
-    Scripts.find({_id:scriptId}).remove().then(function(result) {
+    return Scripts.find({_id:scriptId}).remove().then(function(result) {
         cache.flush();
-        deferred.resolve(result);
-    }).catch(function(err) {
-        console.log(err);
+        return result;
     });
-
-    return deferred.promise;
 };
 
 module.exports = Scripts;

@@ -9,35 +9,30 @@ var Q = require('q');
 var _ = require('lodash');
 
 Style.getAllStyles = function() {
-    var deferred = Q.defer();
-
     var cachedStyle = cache.get('allStyle');
 
     if (cachedStyle) {
-        deferred.resolve(cachedStyle);
+        return Q(cachedStyle);
     } else {
-        Style.find().lean().exec(function (err, style) {
+        return Style.find().lean().exec(function (err, style) {
             if (err) return err;
 
             cache.set('allStyle', style);
-            deferred.resolve(style);
+            return style;
         });
     }
-
-    return deferred.promise;
 };
 
 Style.getStyle = function(style) {
-    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     var cachedStyle = cache.get(style);
 
     if (cachedStyle) {
-        deferred.resolve(cachedStyle);
+        return Q(cachedStyle);
     } else {
-        Style.findOne({"_id": ObjectId(style)}, function (err, result) {
-            if (err) deferred.reject(err);
+        return Style.findOne({"_id": ObjectId(style)}, function (err, result) {
+            if (err) return Q.reject(err);
 
             var bodyContent = result || {body: {content: '<h3>Style ' + style + ' is missing.</h3>'}};
             var cachedStyle = _.find(cache.get('allStyle'), {'_id': ObjectId(style)});
@@ -45,17 +40,13 @@ Style.getStyle = function(style) {
             bodyContent.enabled = _.result(cachedStyle, 'enabled');
 
             cache.set(style, bodyContent);
-            deferred.resolve(bodyContent);
+            return bodyContent;
         });
     }
-
-    return deferred.promise;
 };
 
 Style.postStyle = function(enabled, styleId, styleContent, styleType) {
-    var deferred = Q.defer();
-
-    Style.findOneAndUpdate({_id: styleId},{
+    return Style.findOneAndUpdate({_id: styleId},{
         $set: {
             enabled: enabled,
             type: styleType,
@@ -65,45 +56,29 @@ Style.postStyle = function(enabled, styleId, styleContent, styleType) {
         safe: true,
         upsert: true,
         new: true
-    }, function(err, result){
-        if (err) deferred.reject(err);
-
-        cache.flush();
-        deferred.resolve(204);
     });
-    return deferred.promise;
 };
 
 Style.addStyle = function(styleType, styleName) {
-    var deferred = Q.defer();
-
     var style = new Style({
         enabled: true,
         type: styleType,
         title: styleName,
         content: ''
     });
-    style.save(function(err) {
-        if (err) deferred.reject(err);
+    return style.save(function(err) {
+        if (err) return Q.reject(err);
 
         cache.flush();
-        deferred.resolve(style);
+        return style;
     });
-
-    return deferred.promise;
 };
 
 Style.deleteStyle = function(styleId) {
-    var deferred = Q.defer();
-
-    Style.find({_id:styleId}).remove().then(function(result) {
+    return Style.find({_id:styleId}).remove().then(function(result) {
         cache.flush();
-        deferred.resolve(result);
-    }).catch(function(err) {
-        console.log(err);
+        return result;
     });
-
-    return deferred.promise;
 };
 
 module.exports = Style;
