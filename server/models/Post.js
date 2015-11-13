@@ -10,13 +10,10 @@ var Q = require('q');
 var _ = require('lodash');
 
 Post.getAllPosts = function() {
-    var deferred = Q.defer();
-
-    Post.find({}).lean().exec(function(err, posts) {
+    return Post.find({}).lean().exec(function(err, posts) {
         if (err) return err;
-        return posts;
-    }).then(function(posts) {
-        User.find().lean().exec(function(err, users) {
+
+        return User.find().lean().exec(function(err, users) {
             if (err) return err;
 
             // Todo: Determine why lodash _.each does not contain users in scope (even when passing in this)
@@ -28,34 +25,29 @@ Post.getAllPosts = function() {
                 }), 'username');
             }
 
-            deferred.resolve(posts);
+            return posts;
         }, this);
     });
-
-    return deferred.promise;
 };
 
 Post.getPost = function(post) {
-    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     var cachedPost = cache.get(post);
 
     if (cachedPost) {
-        deferred.resolve(cachedPost);
+        return Q(cachedPost);
     } else {
-        Post.findOne({'_id': ObjectId(post)}).lean().exec(function (err, result) {
-            if (err) deferred.reject(err);
+        return Post.findOne({'_id': ObjectId(post)}).lean().exec(function (err, result) {
+            if (err) return Q.reject(err);
 
             var bodyContent = result || {body: {content: '<h3>Post ' + post + ' is missing.</h3>'}};
             bodyContent.postCategory = result.category;
 
             cache.set(post, bodyContent);
-            deferred.resolve(bodyContent);
+            return bodyContent;
         });
     }
-
-    return deferred.promise;
 };
 
 Post.getCategories = function() {
@@ -66,9 +58,7 @@ Post.getCategories = function() {
 };
 
 Post.postPost = function(postId, postContent, postCategory) {
-    var deferred = Q.defer();
-
-    Post.findOneAndUpdate({_id: postId},{
+    return Post.findOneAndUpdate({_id: postId},{
         $set: {
             content: postContent,
             category: postCategory
@@ -77,42 +67,23 @@ Post.postPost = function(postId, postContent, postCategory) {
         safe: true,
         upsert: true,
         new: true
-    }, function(err, result){
-        if (err) deferred.reject(err);
-
-        cache.flush();
-        deferred.resolve(204);
     });
-    return deferred.promise;
 };
 
 Post.addPost = function(postName, author) {
-    var deferred = Q.defer();
-
     var post = new Post({
         title: postName,
         author: author,
         content: ''
     });
-    post.save(function(err) {
-        if (err) deferred.reject(err);
-        deferred.resolve(post);
-    });
-
-    return deferred.promise;
+    return post.save();
 };
 
 Post.deletePost = function(postId) {
-    var deferred = Q.defer();
-
-    Post.find({_id:postId}).remove().then(function(result) {
+    return Post.find({_id:postId}).remove().then(function(result) {
         cache.flush();
-        deferred.resolve(result);
-    }).catch(function(err) {
-        console.log(err);
+        return result;
     });
-
-    return deferred.promise;
 };
 
 module.exports = Post;

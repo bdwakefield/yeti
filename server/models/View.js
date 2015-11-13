@@ -10,15 +10,16 @@ var Q = require('q');
 var _ = require('lodash');
 
 View.getView = function(view) {
+    var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     if (view) {
         var cachedView = cache.get(view);
 
         if (cachedView) {
-            return Q(cachedView);
+            deferred.resolve(cachedView);
         } else {
-            return View.findOne({"_id": ObjectId(view)}).lean().exec(function (err, result) {
+            View.findOne({"_id": ObjectId(view)}).lean().exec(function (err, result) {
                 if (err) console.log(err);
 
                 var bodyContent = {
@@ -31,34 +32,39 @@ View.getView = function(view) {
                     bodyContent.id = view;
 
                     cache.set(view, bodyContent);
-                    return bodyContent;
+                    deferred.resolve(bodyContent);
                 });
             });
         }
     } else {
-        return Q({body:{content:'No default view or view does not exist.'}});
+        deferred.resolve({body:{content:'No default view or view does not exist.'}});
     }
+
+    return deferred.promise;
 };
 
 View.getDefaultViewId = function() {
+    var deferred = Q.defer();
     var cachedViewId = cache.get('defaultViewId');
 
     if (cachedViewId) {
-        return Q(cachedViewId);
+        deferred.resolve(cachedViewId);
     } else {
-        return View.findOne({
+        View.findOne({
             default: true
         }).lean().exec(function (err, result) {
             if (err) console.log(err);
 
             if (result) {
-                cache.set('defaultViewId', result._id);
-                return result._id;
+                cache.set('defaultViewId', result._id.toString());
+                deferred.resolve(result._id.toString());
             } else {
-                return null;
+                deferred.resolve(null);
             }
         });
     }
+
+    return deferred.promise;
 };
 
 View.getViewForEdit = function(view) {

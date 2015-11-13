@@ -46,7 +46,7 @@ describe('View Route Tests', function() {
             .expect(200)
             .expect(function(result) {
                 var body = result.body;
-                if (body._id) {
+                if (body.id) {
                     return true;
                 } else {
                     throw new Error('Could not fetch views');

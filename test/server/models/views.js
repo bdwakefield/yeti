@@ -48,7 +48,7 @@ describe('View Model Tests', function() {
 
     it('should get view by id', function() {
         return View.getView(_viewId).then(function(result) {
-            assert.deepEqual(result._id, _viewId);
+            assert.deepEqual(result.id, _viewId);
         });
     });
 
@@ -73,7 +73,7 @@ describe('View Model Tests', function() {
     it('should get default view ID', function() {
         return View.postView(_viewId, 'test', '/test', true).then(function() {
             return View.getDefaultViewId().then(function (result) {
-                assert.deepEqual(result._id, _viewId);
+                assert.equal(result, _viewId.toString());
             });
         });
     });
