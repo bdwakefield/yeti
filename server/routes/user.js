@@ -13,23 +13,17 @@ router.get('/', function(req, res) {
     });
 });
 
-router.get('/:userName', function(req, res) {
-    User.findOne({ username: req.body.username }).then(function(result) {
-        res.sendStatus(result);
-    });
-});
-
 router.post('/', function(req, res, next) {
-    User.findOne({ username: req.body.username }).then(function(result) {
+    return User.findOne({ username: req.body.username }).then(function(result) {
         if (result) {
             return next(new Error('User already exists'));
         }
         req.body.hash = crypt.crypt(req.body.password);
         delete req.body.password;
         return (new User(req.body)).save().then(function(user) {
-            res.sendStatus(user);
+            res.json(user._doc);
         });
-    }).catch(next);
+    });
 });
 
 router.post('/verify', function(req, res) {
@@ -73,8 +67,6 @@ router.post('/changepass', function(req, res) {
         } else {
             res.sendStatus(401);
         }
-    }).catch(function() {
-        res.sendStatus(401);
     });
 });
 
@@ -83,11 +75,11 @@ router.post('/register/', function(req, res) {
         username: req.body.username,
         email: req.body.email,
         hash: crypt.crypt(req.body.password)
-    }, function (err) {
+    }, function (err, result) {
         if (err) {
             res.sendStatus(500);
         } else {
-            res.sendStatus(200);
+            res.json(result._doc);
         }
     });
 });
