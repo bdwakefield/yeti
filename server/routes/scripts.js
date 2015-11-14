@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var config = require('../config/index');
 var Scripts = require('../models/Scripts');
+var cache = require('../lib/cache');
 
 router.get('/', function(req, res, next) {
     Scripts.getAllScripts().then(function(result) {
@@ -17,6 +18,7 @@ router.get('/:scriptId', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     Scripts.postScript(req.body.enabled, req.body.scriptId, req.body.scriptContent, req.body.scriptType).then(function (result) {
+        cache.flush();
         res.json(204);
     });
 });
