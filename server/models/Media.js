@@ -44,7 +44,8 @@ Media.getMediaEditorList = function() {
     return deferred.promise;
 };
 
-Media.postMedia = function(fileName, mediaData) {
+/* istanbul ignore next */
+(Media.postMedia = function(fileName, mediaData) {
     var fullImagePath = path.resolve(__dirname, '../../client/images/' + fileName);
     var smallImagePath = path.resolve(__dirname, '../../client/images/thumbs/thumb_' + fileName);
     var deferred = new Q.defer();
@@ -62,9 +63,10 @@ Media.postMedia = function(fileName, mediaData) {
             });
     });
     return deferred.promise;
-};
+}());
 
-Media.deleteMedia = function(fileName) {
+/* istanbul ignore next */
+(Media.deleteMedia = function(fileName) {
     var fullImagePath = path.resolve(__dirname, '../../client/images/' + fileName);
     var smallImagePath = path.resolve(__dirname, '../../client/images/thumbs/thumb_' + fileName);
 
@@ -77,8 +79,9 @@ Media.deleteMedia = function(fileName) {
         });
     });
     return deferred.promise;
-};
+}());
 
+/* istanbul ignore next */
 function resizeImage(srcImg, destImg) {
     var deferred = new Q.defer();
     img.resize({
