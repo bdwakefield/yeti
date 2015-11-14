@@ -4,7 +4,7 @@
   "private": false,
   "scripts": {
     "start": "node app.js",
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
     "bcrypt": "^0.8.3",
