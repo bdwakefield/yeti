@@ -11,7 +11,7 @@ More info coming soon, this is in very very early alpha. If you want to get invo
 [YetiJS](http://yetijs.com)
 
 # Demo
-<a href="http://demo.yetijs.com">Yeti Demo</a><br>
+<a href="http://demo.yetijs.com" target="_blank">Yeti Demo</a><br>
 User: demo<br>
 Password: pass<br>
 
