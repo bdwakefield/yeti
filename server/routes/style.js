@@ -17,19 +17,19 @@ router.get('/:styleId', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     Style.postStyle(req.body.enabled, req.body.styleId, req.body.styleContent, req.body.styleType).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 
 router.post('/addStyle', function(req, res, next) {
     Style.addStyle(req.body.styleType, req.body.styleName).then(function (result) {
-        res.json(result);
+        res.json(result._doc);
     });
 });
 
 router.post('/deleteStyle', function(req, res, next) {
     Style.deleteStyle(req.body.styleId).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 

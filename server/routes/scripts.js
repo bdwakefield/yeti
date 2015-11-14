@@ -17,19 +17,19 @@ router.get('/:scriptId', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     Scripts.postScript(req.body.enabled, req.body.scriptId, req.body.scriptContent, req.body.scriptType).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 
 router.post('/addScript', function(req, res, next) {
     Scripts.addScript(req.body.scriptType, req.body.scriptName).then(function (result) {
-        res.json(result);
+        res.json(result._doc);
     });
 });
 
 router.post('/deleteScript', function(req, res, next) {
     Scripts.deleteScript(req.body.scriptId).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 

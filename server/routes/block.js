@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
 
 router.post('/addBlock', function(req, res, next) {
     Block.addBlock(req.body.blockName, req.body.blockType).then(function (result) {
-        res.json(result);
+        res.json(result._doc);
     });
 });
 

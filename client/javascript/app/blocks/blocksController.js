@@ -110,8 +110,8 @@ app.controller('blocksController', [
                 }
             }).then(function(result) {
                 $mdDialog.hide();
-                if (result && result.data._id && result.data.revisions && result.status === 200) {
-                    window.location.assign('/admin/#/blocks/' + result.data._id + '/' + result.data.revisions.length);
+                if (result && result.data._id) {
+                    initLoad(result.data._id);
                 }
             }).catch(function(err) {
                 console.log(err);

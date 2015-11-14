@@ -23,19 +23,19 @@ router.get('/:postId', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     Post.postPost(req.body.postId, req.body.postContent, req.body.postCategory).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 
 router.post('/addPost', function(req, res, next) {
     Post.addPost(req.body.postName, req.body.author).then(function (result) {
-        res.json(result);
+        res.json(result._doc);
     });
 });
 
 router.post('/deletePost', function(req, res, next) {
     Post.deletePost(req.body.postId).then(function (result) {
-        res.json(result);
+        res.json(204);
     });
 });
 
