@@ -27,8 +27,7 @@ router.post('/', function(req, res, next) {
     } else {
         postArgs = {
             blockId: req.body.blockId,
-            blockContent: req.body.blockContent,
-            blockRevision: req.body.blockRevision
+            blockContent: req.body.blockContent
         }
     }
 
