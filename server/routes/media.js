@@ -25,18 +25,21 @@ var upload = multer({
     inMemory: true
 });
 
+/* istanbul ignore next */
 router.get('/', function(req, res, next) {
     Media.getMediaList().then(function(result) {
         res.json(result);
     });
 });
 
+/* istanbul ignore next */
 router.get('/editorList', function(req, res, next) {
     Media.getMediaEditorList().then(function(result) {
         res.json(result);
     });
 });
 
+/* istanbul ignore next */
 router.get('/getImg/:id', function(req, res, next) {
     Media.getMedia(req.params.id).then(function(result) {
         res.writeHead(200, {'Content-Type': 'image/png' });
@@ -44,6 +47,7 @@ router.get('/getImg/:id', function(req, res, next) {
     });
 });
 
+/* istanbul ignore next */
 router.get('/getThumb/:id', function(req, res, next) {
     Media.getMedia(req.params.id).then(function(result) {
         res.writeHead(200, {'Content-Type': 'image/png' });
@@ -51,6 +55,7 @@ router.get('/getThumb/:id', function(req, res, next) {
     });
 });
 
+/* istanbul ignore next */
 router.post('/', function(req, res, next) {
     var data = new Buffer(req.body.media_data, 'binary');
     Media.postMedia(req.body.file_name, data).then(function(result) {
@@ -60,6 +65,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
+/* istanbul ignore next */
 router.post('/editorUpload', upload.single('file'), function(req, res, next) {
     var data = new Buffer(req.file.buffer, 'binary');
     Media.postMedia(req.file.originalname, data).then(function(result) {
@@ -71,6 +77,7 @@ router.post('/editorUpload', upload.single('file'), function(req, res, next) {
     });
 });
 
+/* istanbul ignore next */
 router.post('/deleteImg', function(req, res, next) {
     Media.deleteMedia(req.body.fileName).then(function() {
         res.json(204);
