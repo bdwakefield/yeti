@@ -18,13 +18,13 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
 
 #Screenshots
 ####Views Screen
-<img src="http://www.yetijs.com/images/yeti-view-demo.jpg" width="75%" height="75%">
+<img src="http://www.yetijs.com/images/yeti-view-demo.jpg">
 ####Blog Post Block Setup
-<img src="http://www.yetijs.com/images/yeti-blogblock-demo.jpg" width="75%" height="75%">
+<img src="http://www.yetijs.com/images/yeti-blogblock-demo.jpg">
 ####Real world benchmark of yetijs.com
-<img src="http://www.yetijs.com/images/demo-gtmetrix.jpg" width="75%" height="75%">
+<img src="http://www.yetijs.com/images/demo-gtmetrix.jpg">
 ####WYSIWYG Editor
-<img src="http://www.yetijs.com/images/yeti-editor-demo.jpg" width="75%" height="75%">
+<img src="http://www.yetijs.com/images/yeti-editor-demo.jpg">
 
 More info coming soon, this is in very very early alpha. If you want to get involved just let me know.
 
@@ -52,4 +52,4 @@ Password: pass<br>
 - [ ] Redesign yetijs.com to include new UI and some more details
 
 #Mission Statement
-This started as a personal project purely for fun and quickly tuend into a viable product. I decided to open source it because I believe that community supported software is better software. Feel free to hack away on it and put up PRs. I am very busy professionally, but try to spend all of my free time on this project. I welcome any and all help available. Enjoy!
+This started as a personal project purely for fun and quickly turned into a viable product. I decided to open source it because I believe that community supported software produces a better product. Feel free to hack away on it and put up PRs. I am very busy professionally, but try to spend all of my free time on this project. I welcome any and all help available. Enjoy!
