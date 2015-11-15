@@ -17,9 +17,14 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
 * Actively being developed
 
 #Screenshots
+####Views Screen
 <img src="http://www.yetijs.com/images/yeti-view-demo.jpg" width="75%" height="75%">
+####Blog Post Block Setup
 <img src="http://www.yetijs.com/images/yeti-blogblock-demo.jpg" width="75%" height="75%">
+####Real world benchmark of yetijs.com
 <img src="http://www.yetijs.com/images/demo-gtmetrix.jpg" width="75%" height="75%">
+####WYSIWYG Editor
+<img src="http://www.yetijs.com/images/yeti-editor-demo.jpg" width="75%" height="75%">
 
 More info coming soon, this is in very very early alpha. If you want to get involved just let me know.
 
