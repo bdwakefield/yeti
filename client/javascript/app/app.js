@@ -15,7 +15,7 @@
  */
 'use strict';
 
-var app = angular.module('dash', [
+var app = angular.module('yeti', [
     'ui.router',
     'ngCookies',
     'ngMaterial',
