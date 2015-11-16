@@ -37,7 +37,8 @@ User: demo<br>
 Password: pass<br>
 
 # Todo
-- [ ] Unit/Integration tests
+- [X] Server Unit/Integration Tests
+- [ ] Client Unit/Integration Tests
 - [ ] Theming
 - [ ] Plugins
 - [ ] Error handling throughout
