@@ -45,7 +45,7 @@ router.post('/', function(req, res, next) {
 
 router.post('/verify', function(req, res) {
     User.findOne({ username: req.body.username }).then(function(result) {
-        if (User.verify(req.body.password, result.hash)) {
+        if (result && User.verify(req.body.password, result.hash)) {
             var token = jwt.sign({
                 userId: result._id,
                 userName: req.body.username

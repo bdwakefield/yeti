@@ -23,7 +23,7 @@ Utils = {
 
 };
 
-var _userName = 'thom';
+var _userName = 'demo';
 var _password = 'pass';
 
 describe('Protractor Tests', function() {
@@ -56,7 +56,50 @@ describe('Protractor Tests', function() {
             });
         });
     });
-        //browser.takeScreenshot().then(function (png) {
-        //    Utils.writeScreenShot(png, 'test.png');
-        //});
+
+    it('should add a user', function() {
+        element(by.css('[ng-click="showConfirm($event)"]')).click();
+
+        element(by.model('inputUsername')).sendKeys('testUser');
+        element(by.model('inputEmail')).sendKeys('test@user.com');
+        element(by.model('inputPassword')).sendKeys('pass');
+
+        element(by.css('[ng-click="userSubmit()"]')).click();
+
+        element.all(by.repeater('user in userList')).then(function(users) {
+            users[1].element(by.binding('user.username')).getText().then(function(result) {
+                expect(result).toBe('testUser');
+            });
+        });
+    });
+
+    it('should delete added user', function() {
+        element.all(by.repeater('user in userList')).then(function(users) {
+            users[1].element(by.css('[ng-click="deleteUser($event, user._id)"]')).click();
+            browser.getAllWindowHandles().then(function(handles) {
+                browser.switchTo().window(handles[0]).then(function() {
+                    element(by.css('[ng-click="dialog.hide()"]')).click();
+                    browser.waitForAngular();
+                    browser.getAllWindowHandles().then(function(handles) {
+                        browser.switchTo().window(handles[0]);
+                    });
+                });
+            });
+        });
+    });
+
+    it('should verify user deleted', function() {
+        element.all(by.repeater('user in userList')).then(function(users) {
+            users[0].element(by.binding('user.username')).getText().then(function(result) {
+                expect(result).toBe(_userName);
+            });
+            expect(users[1]).toBe(undefined);
+        });
+    });
+
+    function screenShot() {
+        browser.takeScreenshot().then(function (png) {
+            Utils.writeScreenShot(png, 'test.png');
+        });
+    }
 });

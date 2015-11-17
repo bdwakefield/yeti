@@ -16,6 +16,8 @@
 'use strict';
 
 var inq = require('inquirer');
+var User = require('./server/models/User');
+var crypt = require('./server/lib/crypt');
 
 var questions = [
     {
@@ -30,6 +32,17 @@ var questions = [
         }
     },
     {
+        type: 'input',
+        name: 'email',
+        message: 'What is your email address?',
+        validate: function(answer) {
+            if (!answer.match(/\S+@\S+/)) {
+                return 'You must enter a valid email';
+            }
+            return true;
+        }
+    },
+    {
         type: 'password',
         name: 'password',
         message: 'Please enter a password\n (Password must be 8 characters with at least 1 number and 1 special character)\n',
@@ -39,37 +52,47 @@ var questions = [
             }
             return true;
         }
-    },
-    {
-        type: 'checkbox',
-        name: 'checkbox_test',
-        message: 'Checkbox Test',
-        choices: [
-            new inq.Separator('First Choices:'),
-            {
-                name: 'First'
-            },
-            {
-                name: 'Second'
-            },
-            {
-                name: 'Third'
-            }
-        ],
-        validate: function(answer) {
-            if (answer.length < 1) {
-                return 'You must choose at least one.';
-            }
-            return true;
-        }
-    },
-    {
-        type: 'confirm',
-        name: 'test_confirm',
-        message: 'Test Confirm'
     }
+    //,{
+    //    type: 'checkbox',
+    //    name: 'checkbox_test',
+    //    message: 'Checkbox Test',
+    //    choices: [
+    //        new inq.Separator('First Choices:'),
+    //        {
+    //            name: 'First'
+    //        },
+    //        {
+    //            name: 'Second'
+    //        },
+    //        {
+    //            name: 'Third'
+    //        }
+    //    ],
+    //    validate: function(answer) {
+    //        if (answer.length < 1) {
+    //            return 'You must choose at least one.';
+    //        }
+    //        return true;
+    //    }
+    //},
+    //{
+    //    type: 'confirm',
+    //    name: 'test_confirm',
+    //    message: 'Test Confirm'
+    //}
 ];
 
 inq.prompt(questions, function(answers) {
-    console.log(JSON.stringify(answers));
+    User.create({
+        username: answers.username,
+        email: answers.email,
+        hash: crypt.crypt(answers.password)
+    }).then(function (err, result) {
+        if (err) {
+            console.log('Failed setup.');
+        } else {
+            console.log('Created user ' + answers.username);
+        }
+    });
 });
