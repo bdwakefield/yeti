@@ -54,7 +54,7 @@ Password: pass<br>
 - [ ] Plugins
 - [ ] Error handling throughout
 - [ ] Backup/restore within admin panel
-- [ ] CLI for first install/setup
+- [X] CLI for first install/setup
 - [ ] Settings page in admin panel
 - [ ] Built-in SEO settings
 - [ ] Social login/register
