@@ -25,6 +25,7 @@ var Q = require('q');
 var _ = require('lodash');
 
 var utils = {};
+var env = process.env.NODE_ENV || 'default';
 
 utils.buildDbPath = function() {
     return this.readConfig().then(function(config) {
@@ -100,11 +101,11 @@ utils.buildPage = function(viewId) {
 };
 
 utils.readConfig = function() {
-    return Q(JSON.parse(fs.readFileSync(__dirname + '/../config/default.json')));
+    return Q(JSON.parse(fs.readFileSync(__dirname + '/../config/' + env + '.json')));
 };
 
 utils.writeConfig = function(config) {
-    return Q(fs.writeFileSync(__dirname + '/../config/default.json', JSON.stringify(config, null, 4)));
+    return Q(fs.writeFileSync(__dirname + '/../config/' + env + '.json', JSON.stringify(config, null, 4)));
 };
 
 module.exports = utils;
