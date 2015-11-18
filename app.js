@@ -49,25 +49,31 @@ var server = http.createServer(app);
 
 var config = {};
 
-utils.readConfig().then(function(result) {
-    config = result;
-}).then(function() {
-    return buildQuestions(config);
-}).then(function(questions) {
-    if (questions.length > 0) {
-        inq.prompt(questions, function (answers) {
-            config.port = +answers.nodePort;
-            config.dbServer = 'mongodb://' + answers.dbServer;
-            config.dbPort = +answers.dbPort;
-            config.dbDatabase = answers.dbDatabase;
-            utils.writeConfig(config).then(function() {
-                connectDb();
+var env = process.env.NODE_ENV || 'default';
+
+if (env === 'test') {
+    connectDb();
+} else {
+    utils.readConfig().then(function (result) {
+        config = result;
+    }).then(function () {
+        return buildQuestions(config);
+    }).then(function (questions) {
+        if (questions.length > 0) {
+            inq.prompt(questions, function (answers) {
+                config.port = +answers.nodePort;
+                config.dbServer = 'mongodb://' + answers.dbServer;
+                config.dbPort = +answers.dbPort;
+                config.dbDatabase = answers.dbDatabase;
+                utils.writeConfig(config).then(function () {
+                    connectDb();
+                });
             });
-        });
-    } else {
-        connectDb();
-    }
-});
+        } else {
+            connectDb();
+        }
+    });
+}
 
 function buildQuestions(config) {
     var questions = [];
@@ -138,7 +144,11 @@ function structureQuestion(type, name, message, validateFn) {
 
 function connectDb() {
     db.connect().then(function () {
-        checkAndCreateUser();
+        if (env !== 'test') {
+            checkAndCreateUser();
+        } else {
+            startServer();
+        }
     }).catch(function (err) {
         console.log('ERROR: Could not connect to mongo server, please correct this in the configuration file and check to make sure NODE_ENV environment variable is defined.\n' + err.name + ': ' + err.message);
         process.exit();
