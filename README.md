@@ -34,7 +34,7 @@ More info coming soon, this is in very very early alpha. If you want to get invo
 #Installation
 1. install node
 2. install mongodb
-3. git clone https://github.com/Enmadaio/yetiloc
+3. git clone https://github.com/Enmadaio/yeti
 4. cd yeti
 5. npm install
 6. bower install
