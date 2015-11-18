@@ -34,13 +34,18 @@ More info coming soon, this is in very very early alpha. If you want to get invo
 #Installation
 1. install node
 2. install mongodb
-3. git clone https://github.com/Enmadaio/yeti
-4. cd yeti
-5. npm install
-6. bower install
-7. node app.js
+3. Install ImageMagick
+  * http://www.imagemagick.org/script/binary-releases.php
+  * MacOS: brew install imagemagick
+  * Linux: Use website above, it's available in various package formats
+  * Windows: Same as above, binaries available
+4. git clone https://github.com/Enmadaio/yeti
+5. cd yeti
+6. npm install
+7. bower install
+8. node app.js
   * follow prompts to create config file and first user name
-8. go to http://localhost:<port specified during setup>/admin/ and login
+9. go to http://localhost:<port specified during setup>/admin/ and login
 
 # Demo
 <a href="http://demo.yetijs.com" target="_blank">Yeti Demo</a><br>
