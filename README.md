@@ -31,6 +31,17 @@ More info coming soon, this is in very very early alpha. If you want to get invo
 #Official Site
 [YetiJS](http://yetijs.com) - Created entirely and maintained with itself (very meta huh?)
 
+#Installation
+1. install node
+2. install mongodb
+3. git clone https://github.com/Enmadaio/yetiloc
+4. cd yeti
+5. npm install
+6. bower install
+7. node app.js
+  * follow prompts to create config file and first user name
+8. go to http://localhost:<port specified during setup>/admin/ and login
+
 # Demo
 <a href="http://demo.yetijs.com" target="_blank">Yeti Demo</a><br>
 User: demo<br>
