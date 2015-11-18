@@ -1,0 +1,25 @@
+{
+    "collections": {
+        "users": "accounts",
+        "settings": "settings",
+        "views": "views",
+        "blocks": "blocks",
+        "posts": "posts",
+        "media": "media",
+        "styles": "styles",
+        "scripts": "scripts"
+    },
+    "secretPhrase": "yeti",
+    "tokenTimeout": 60,
+    "imageTypes": [
+        "jpg",
+        "gif",
+        "tiff",
+        "png",
+        "svg"
+    ],
+    "port": 3000,
+    "dbServer": "mongodb://127.0.0.1",
+    "dbPort": 27017,
+    "dbDatabase": "yeti"
+}

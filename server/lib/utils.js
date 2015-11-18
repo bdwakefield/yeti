@@ -16,17 +16,20 @@
 'use strict';
 
 var util = require('util');
-var config = require('../config/index');
+var fs = require('fs');
 var Styles = require('../models/Style');
 var Scripts = require('../models/Scripts');
 var View = require('../models/View');
 var Uglify = require("uglify-js");
+var Q = require('q');
 var _ = require('lodash');
 
 var utils = {};
 
 utils.buildDbPath = function() {
-    return util.format('%s:%s/%s', config.dbServer, config.dbPort, config.dbDatabase);
+    return this.readConfig().then(function(config) {
+        return util.format('%s:%s/%s', config.dbServer, config.dbPort, config.dbDatabase);
+    });
 };
 
 utils.obfuscateJs = function(code) {
@@ -94,6 +97,14 @@ utils.buildPage = function(viewId) {
             };
         });
     });
+};
+
+utils.readConfig = function() {
+    return Q(JSON.parse(fs.readFileSync(__dirname + '/../config/default.json')));
+};
+
+utils.writeConfig = function(config) {
+    return Q(fs.writeFileSync(__dirname + '/../config/default.json', JSON.stringify(config, null, 4)));
 };
 
 module.exports = utils;

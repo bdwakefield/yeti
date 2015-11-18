@@ -19,16 +19,30 @@ var Q = require('q');
 var utils = require('./utils');
 var mongoose = require('mongoose');
 
+var connectionOptions = {
+    server: {
+        socketOptions: {
+            keepAlive: 1,
+            connectTimeoutMS: 5000
+        }
+    }
+};
+
 module.exports = {
     connect: function() {
         var deferred = Q.defer();
 
-        mongoose.connect(utils.buildDbPath(), function(err, db) {
-            if (err) {
-                deferred.reject(err);
-            }
-            deferred.resolve(db);
+        utils.buildDbPath().then(function(path) {
+            mongoose.connect(path, connectionOptions ,function(err, db) {
+                if (err) deferred.reject(err);
+
+                deferred.resolve(db);
+            });
         });
+
         return deferred.promise;
+    },
+    connected: function() {
+        return mongoose.connection.readyState;
     }
 };

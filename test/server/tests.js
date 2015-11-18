@@ -1,10 +1,10 @@
 var Q = require('q');
-var User = require('../server/models/User');
-var Block = require('../server/models/Block');
-var Post = require('../server/models/Post');
-var Script = require('../server/models/Scripts');
-var Style = require('../server/models/Style');
-var View = require('../server/models/View');
+var User = require('../../server/models/User');
+var Block = require('../../server/models/Block');
+var Post = require('../../server/models/Post');
+var Script = require('../../server/models/Scripts');
+var Style = require('../../server/models/Style');
+var View = require('../../server/models/View');
 
 var promises = [
     User.find({}).remove(),
