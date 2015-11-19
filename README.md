@@ -29,7 +29,7 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
 6. ```bower install```
 7. ```node app.js```
   * follow prompts to create config file and first user name
-8. Go to http://localhost:<port specified during setup>/admin/ and login
+8. Check out your new site at http://localhost:3000 (Where 3000 is the port your specified in setup prompts)
 
 #Screenshots
 ####Views Screen
