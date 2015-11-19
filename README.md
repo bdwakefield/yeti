@@ -17,17 +17,14 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
 * Actively being developed
 
 #Installation
-1. Install node
-2. Install mongodb
-3. Install ImageMagick
-  * http://www.imagemagick.org/script/binary-releases.php
+1. Install <a href="https://nodejs.org/en/download/package-manager/">NodeJS</a>
+2. Install <a href="https://docs.mongodb.org/manual/installation/">MongoDB</a>
+3. Install <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> (This is needed for the gallery feature)
   * MacOS: brew install imagemagick
-  * Linux: Use website above, it's available in various package formats
-  * Windows: Same as above, binaries available
 4. ```git clone https://github.com/Enmadaio/yeti```
 5. ```npm install```
 6. ```bower install```
-7. ```node app.js```
+7. ```npm start```
   * follow prompts to create config file and first user name
 8. Check out your new site at http://localhost:3000 (Where 3000 is the port your specified in setup prompts)
 
