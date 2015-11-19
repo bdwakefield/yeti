@@ -9,6 +9,9 @@ body, html {
 #yetiIcon {
     margin-top: 5px;
     z-index: 10;
+    width: 50px;
+    height: 50px;
+    margin-right: 55px;
 }
 #adminSidebar {
     position: fixed;
@@ -86,7 +89,7 @@ md-divider[md-inset] {
     margin: 0;
 }
 .navbar-default .navbar-brand {
-    color: #F8F8F8);
+    color: #F8F8F8;
 }
 .navbar-default .navbar-nav li a {
     color: #F8F8F8;
@@ -238,10 +241,25 @@ fieldset {
     left: 5px;
 }
 .yeti-menu {
-    width: 90px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    margin: 0;
+    margin-top: 35px;
+    text-align: center;
+    width: 115px;
+    font-size: 0.8em;
+    padding: 15px 10px 17px 10px;
+    transition: opacity 0.3s ease-out;
+}
+.yeti-menu:after {
+    content: '';
+    display: block;
+    margin: 5px auto auto auto;
+    height: 2px;
+    width: 0;
+    background: transparent;
+    transition: width .3s ease, background-color .3s ease;
+}
+.yeti-menu:hover:after {
+    width: 70%;
+    background: #F8F8F8;
 }
 .md-fab-action-item a {
     color: rgba(255, 255, 255, 0.8);
@@ -276,9 +294,10 @@ md-fab-speed-dial md-fab-trigger {
 #page-content-wrapper {
     width: 100%;
     position: absolute;
-    margin-top: 70px;
+    margin-top: 60px;
     padding: 15px;
     box-shadow: -12px 2px 20px -15px #333;
+    z-index: 1;
 }
 #page-content-wrapper:focus {
     outline: none;
@@ -288,7 +307,7 @@ md-fab-speed-dial md-fab-trigger {
 }
 #control-panel {
     width: 500px;
-    margin-top: 70px;
+    margin-top: 60px;
     background-color: rgb(236, 236, 236);
     color: #333;
 }

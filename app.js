@@ -27,6 +27,7 @@ var http = require('http');
 var inq = require('inquirer');
 var favicon = require('serve-favicon');
 var _ = require('lodash');
+var Q = require('q');
 var routes = require('./server/routes/index');
 var admin = require('./server/routes/admin');
 var users = require('./server/routes/user');
@@ -57,7 +58,7 @@ if (env === 'test') {
     utils.readConfig().then(function (result) {
         config = result;
     }).then(function () {
-        return buildQuestions(config);
+        return utils.buildQuestions(config);
     }).then(function (questions) {
         if (questions.length > 0) {
             inq.prompt(questions, function (answers) {
@@ -66,146 +67,33 @@ if (env === 'test') {
                 config.dbPort = +answers.dbPort;
                 config.dbDatabase = answers.dbDatabase;
                 utils.writeConfig(config).then(function () {
-                    connectDb();
+                    connectDb().then(function() {
+                        utils.insertSampleData().then(function() {
+                            startServer();
+                        });
+                    });
                 });
             });
         } else {
-            connectDb();
+            connectDb().then(function() {
+                startServer();
+            });
         }
     });
-}
-
-function buildQuestions(config) {
-    var questions = [];
-    if (!config.port) {
-        questions.push(structureQuestion(
-            'input',
-            'nodePort',
-            'What port do you want the server to run on?',
-            function(answer) {
-                if (answer <= 1024) {
-                    return 'You can not use a port below port 1024 as a non-root user.';
-                }
-                return true;
-            }
-        ));
-    }
-    if (!config.dbServer) {
-        questions.push(structureQuestion(
-            'input',
-            'dbServer',
-            'What is the address of your mongo server?',
-            function(answer) {
-                if (!answer) {
-                    return 'Must use a valid IP or hostname.';
-                }
-                return true;
-            }
-        ));
-    }
-    if (!config.dbPort) {
-        questions.push(structureQuestion(
-            'input',
-            'dbPort',
-            'What is the port of your mongo server?',
-            function(answer) {
-                if (!answer.match(/^[0-9]*$/)) {
-                    return 'Must use a valid port.';
-                }
-                return true;
-            }
-        ));
-    }
-    if (!config.dbDatabase) {
-        questions.push(structureQuestion(
-            'input',
-            'dbDatabase',
-            'What is the name of the database would you like to use?',
-            function(answer) {
-                if (!answer) {
-                    return 'Must provide a database to use.';
-                }
-                return true;
-            }
-        ));
-    }
-
-    return questions;
-}
-
-function structureQuestion(type, name, message, validateFn) {
-    return {
-        type: type,
-        name: name,
-        message: message,
-        validate: validateFn
-    };
 }
 
 function connectDb() {
+    var deferred = Q.defer();
     db.connect().then(function () {
-        if (env !== 'test') {
-            checkAndCreateUser();
-        } else {
-            startServer();
-        }
+        utils.checkAndCreateUser().then(function (result) {
+            deferred.resolve(result);
+        });
     }).catch(function (err) {
         console.log('ERROR: Could not connect to mongo server, please correct this in the configuration file and check to make sure NODE_ENV environment variable is defined.\n' + err.name + ': ' + err.message);
+        deferred.reject(err);
         process.exit();
     });
-}
-
-function checkAndCreateUser() {
-    User.getAllUsers().then(function (result) {
-        if (result.length === 0) {
-            var questions = [
-                structureQuestion(
-                    'input',
-                    'username',
-                    'What user name do you want to use?',
-                    function(answer) {
-                        if (answer.length < 5) {
-                            return 'You must enter a valid username';
-                        }
-                        return true;
-                    }),
-                structureQuestion(
-                    'input',
-                    'email',
-                    'What is your email address?',
-                    function(answer) {
-                        if (!answer.match(/\S+@\S+/)) {
-                            return 'You must enter a valid email';
-                        }
-                        return true;
-                    }),
-                structureQuestion(
-                    'password',
-                    'password',
-                    'Please enter a password\n (Password must be 8 characters with at least 1 number and 1 special character)\n',
-                    function(answer) {
-                        if (!answer.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)) {
-                            return 'Password must be 8 characters with at least 1 number and 1 special character'
-                        }
-                        return true;
-                    })
-            ];
-            inq.prompt(questions, function (answers) {
-                User.create({
-                    username: answers.username,
-                    email: answers.email,
-                    hash: crypt.crypt(answers.password)
-                }).then(function (result) {
-                    console.log('Created user ' + answers.username);
-                    startServer();
-                });
-            });
-        } else {
-            startServer();
-        }
-    }).catch(function (err) {
-        console.log(err);
-    });
+    return deferred.promise;
 }
 
 function startServer() {

@@ -50,7 +50,7 @@ router.post('/verify', function(req, res) {
                 userId: result._id,
                 userName: req.body.username
             }, config.secretPhrase, {
-                expiresInMinutes: config.tokenTimeout
+                expiresIn: config.tokenTimeout * 60
             });
             res.json({
                 success: true,

@@ -20,9 +20,13 @@ var fs = require('fs');
 var Styles = require('../models/Style');
 var Scripts = require('../models/Scripts');
 var View = require('../models/View');
+var Block = require('../models/Block');
 var Uglify = require("uglify-js");
+var inq = require('inquirer');
 var Q = require('q');
 var _ = require('lodash');
+var crypt = require('./crypt');
+var User = require('../models/User');
 
 var utils = {};
 var env = process.env.NODE_ENV || 'default';
@@ -107,5 +111,157 @@ utils.readConfig = function() {
 utils.writeConfig = function(config) {
     return Q(fs.writeFileSync(__dirname + '/../config/' + env + '.json', JSON.stringify(config, null, 4)));
 };
+
+utils.checkAndCreateUser = function() {
+    var deferred = Q.defer();
+    User.getAllUsers().then(function (result) {
+        if (result.length === 0) {
+            var questions = [
+                structureQuestion(
+                    'input',
+                    'username',
+                    'What user name do you want to use?',
+                    function(answer) {
+                        if (answer.length < 5) {
+                            return 'You must enter a valid username';
+                        }
+                        return true;
+                    }),
+                structureQuestion(
+                    'input',
+                    'email',
+                    'What is your email address?',
+                    function(answer) {
+                        if (!answer.match(/\S+@\S+/)) {
+                            return 'You must enter a valid email';
+                        }
+                        return true;
+                    }),
+                structureQuestion(
+                    'password',
+                    'password',
+                    'Please enter a password\n (Password must be 8 characters with at least 1 number and 1 special character)\n',
+                    function(answer) {
+                        if (!answer.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/)) {
+                            return 'Password must be 8 characters with at least 1 number and 1 special character'
+                        }
+                        return true;
+                    })
+            ];
+            inq.prompt(questions, function (answers) {
+                User.create({
+                    username: answers.username,
+                    email: answers.email,
+                    hash: crypt.crypt(answers.password)
+                }).then(function(result) {
+                    console.log('Created user');
+                    deferred.resolve(result);
+                });
+            });
+        } else {
+            deferred.resolve();
+        }
+    }).catch(function (err) {
+        deferred.reject(err);
+    });
+
+    return deferred.promise;
+};
+
+utils.buildQuestions = function(config) {
+    var questions = [];
+    if (!config.port) {
+        questions.push(structureQuestion(
+            'input',
+            'nodePort',
+            'What port do you want the server to run on?',
+            function(answer) {
+                if (answer <= 1024) {
+                    return 'You can not use a port below port 1024 as a non-root user.';
+                }
+                return true;
+            }
+        ));
+    }
+    if (!config.dbServer) {
+        questions.push(structureQuestion(
+            'input',
+            'dbServer',
+            'What is the address of your mongo server?',
+            function(answer) {
+                if (!answer) {
+                    return 'Must use a valid IP or hostname.';
+                }
+                return true;
+            }
+        ));
+    }
+    if (!config.dbPort) {
+        questions.push(structureQuestion(
+            'input',
+            'dbPort',
+            'What is the port of your mongo server?',
+            function(answer) {
+                if (!answer.match(/^[0-9]*$/)) {
+                    return 'Must use a valid port.';
+                }
+                return true;
+            }
+        ));
+    }
+    if (!config.dbDatabase) {
+        questions.push(structureQuestion(
+            'input',
+            'dbDatabase',
+            'What is the name of the database would you like to use?',
+            function(answer) {
+                if (!answer) {
+                    return 'Must provide a database to use.';
+                }
+                return true;
+            }
+        ));
+    }
+
+    return questions;
+};
+
+utils.insertSampleData = function() {
+    var sampleBlock = fs.readFileSync(__dirname + '/../views/sample/sampleBlock.html', 'utf8');
+    var sampleStyle = fs.readFileSync(__dirname + '/../views/sample/sample.css', 'utf8');
+    var sampleScript = fs.readFileSync(__dirname + '/../views/sample/sample.js', 'utf8');
+    var blockId;
+
+    return Block.addBlock('Sample Block', 'content').then(function(result) {
+        blockId = result._doc._id;
+        return Block.postBlock({
+            blockId: blockId,
+            blockContent: sampleBlock
+        });
+    }).then(function() {
+        View.addView('Sample View').then(function(result) {
+            return View.postView(result._doc._id, '{{-' + blockId + '}}', '/sample', true);
+        });
+    }).then(function() {
+        Styles.addStyle('code', 'Sample Style').then(function(result) {
+            return Styles.postStyle(true, result._doc._id, sampleStyle, 'code');
+        });
+    }).then(function() {
+        Scripts.addScript('code', 'Sample Script').then(function(result) {
+            return Scripts.postScript(true, result._doc._id, sampleScript, 'code');
+        })
+    }).catch(function(err) {
+        return Q.reject(err);
+    })
+};
+
+function structureQuestion(type, name, message, validateFn) {
+    return {
+        type: type,
+        name: name,
+        message: message,
+        validate: validateFn
+    };
+}
 
 module.exports = utils;

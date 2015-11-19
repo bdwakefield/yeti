@@ -37,6 +37,7 @@ app.controller('adminController', [
         $scope.$on('$stateChangeSuccess', function() {
             viewService.getViews().then(function(result) {
                 $scope.views = result;
+                $state.go('views');
             });
         });
 }]);

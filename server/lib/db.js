@@ -33,10 +33,10 @@ module.exports = {
         var deferred = Q.defer();
 
         utils.buildDbPath().then(function(path) {
-            mongoose.connect(path, connectionOptions ,function(err, db) {
+            mongoose.connect(path, connectionOptions ,function(err) {
                 if (err) deferred.reject(err);
 
-                deferred.resolve(db);
+                deferred.resolve();
             });
         });
 
