@@ -210,8 +210,9 @@ app.controller('viewsController', [
                     'onDragOver="dragOver(this, event)"' +
                     'onDragLeave="dragLeave(this, event)">' + blockContent.content +
                     '<div class="blockControlBox">' +
-                    '<i class="btn fa fa-pencil fa-4x"" onclick="editBlock(\'' + blockContent._id + '\')"></i>' +
-                    '<i class="btn fa fa-trash-o fa-4x" onclick="deleteBlock(\'' + blockContent._id +'\')"></i>' +
+                    '<i class="block-button btn fa fa-pencil fa-4x"" onclick="editBlock(\'' + blockContent._id + '\')"></i>' +
+                    '<i class="block-button btn fa fa-trash-o fa-4x" onclick="deleteBlock(\'' + blockContent._id +'\')"></i>' +
+                    '<div class="block-title">' + blockContent.title + '</div>' +
                     '</div>' +
                     '</div>';
             });
