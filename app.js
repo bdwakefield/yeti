@@ -53,7 +53,9 @@ var config = {};
 var env = process.env.NODE_ENV || 'default';
 
 if (env === 'test') {
-    connectDb();
+    db.connect().then(function() {
+        startServer();
+    });
 } else {
     utils.readConfig().then(function (result) {
         config = result;
