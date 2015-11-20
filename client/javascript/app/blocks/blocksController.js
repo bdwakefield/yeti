@@ -25,6 +25,7 @@ app.controller('blocksController', [
     '$mdDialog',
     'loaderService',
     'blockService',
+    'postService',
     '$mdToast',
     function(
         $rootScope,
@@ -36,6 +37,7 @@ app.controller('blocksController', [
         $mdDialog,
         loaderService,
         blockService,
+        postService,
         $mdToast
     ) {
         $scope.model = {};
@@ -149,13 +151,14 @@ app.controller('blocksController', [
         function initLoad(blockId) {
             loaderService.show();
 
-            blockService.getBlocks(true).then(function (result) {
-                $scope.model.blocks = result;
-                blockService.setSelectedBlockId(blockId || result[0]._id);
-                $scope.model.currentBlockId = blockService.getSelectedBlockId();
+            postService.getPostCategories().then(function(result) {
+                $scope.model.postCategories = result;
+            }).then(function() {
+                blockService.getBlocks(true).then(function (result) {
+                    $scope.model.blocks = result;
+                    blockService.setSelectedBlockId(blockId || result[0]._id);
+                    $scope.model.currentBlockId = blockService.getSelectedBlockId();
 
-                $http.get('/api/posts/categories').then(function (result) {
-                    $scope.model.postCategories = result.data;
                     buildBlock(blockId || null);
                     loaderService.hide();
                 });

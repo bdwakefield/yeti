@@ -51,19 +51,23 @@ app.controller('postsController', [
         function initLoad(postId) {
             loaderService.show();
 
-            postService.getPosts(true).then(function (result) {
-                $scope.model.posts = result;
-                if (!postId) {
-                    buildPost($scope.model.posts[0]._id);
-                    $scope.model.currentPost = postService.getPostById($scope.model.posts[0]._id);
-                    $scope.model.currentPostId = $scope.model.posts[0]._id;
-                } else {
-                    buildPost(postId);
-                    $scope.model.currentPost = postService.getPostById(postId);
-                    $scope.model.currentPostId = postId;
-                }
+            postService.getPostCategories().then(function(result) {
+                $scope.model.postCategories = result;
+            }).then(function() {
+                postService.getPosts(true).then(function (result) {
+                    $scope.model.posts = result;
+                    if (!postId) {
+                        buildPost($scope.model.posts[0]._id);
+                        $scope.model.currentPost = postService.getPostById($scope.model.posts[0]._id);
+                        $scope.model.currentPostId = $scope.model.posts[0]._id;
+                    } else {
+                        buildPost(postId);
+                        $scope.model.currentPost = postService.getPostById(postId);
+                        $scope.model.currentPostId = postId;
+                    }
 
-                loaderService.hide();
+                    loaderService.hide();
+                });
             });
         }
 

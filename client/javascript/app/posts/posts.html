@@ -28,9 +28,16 @@
             </div>
         </div>
 
-        <div flex="100" layout="row" class="control-panel-item">
+        <div flex="100" layout="column" class="control-panel-item">
+            <h4 class="control-panel-item-heading">Select a Category</h4>
             <md-input-container>
-                <label class="md-accent md-hue-1">Category</label><input name="postCategory" required type="text" ng-minlength="2" ng-model="model.postCategory">
+                <label class="md-accent md-hue-1">Existing Category</label>
+                <md-select class="md-accent md-hue-1" placeholder="Select an existing category" ng-model="model.postCategory">
+                    <md-option ng-repeat="category in model.postCategories" value="{{category}}">{{category | limitTo: 15 }}{{category.length > 15 ? '&hellip;' : ''}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container>
+                <label class="md-accent md-hue-1">New Category</label><input name="postCategory" required type="text" ng-minlength="2" ng-model="model.postCategory">
             </md-input-container>
         </div>
 

@@ -25,6 +25,7 @@ app.factory('postService', [
         var postService = {};
         var posts;
         var selectedPostId;
+        var postCategories;
 
         postService.setSelectedPostId = function(postId) {
             selectedPostId = postId;
@@ -40,7 +41,7 @@ app.factory('postService', [
 
         postService.getPosts = function(cacheBuster) {
             if (!posts || cacheBuster) {
-                return fetchPosts().then(function(result) {
+                return fetchPosts().then(function() {
                     return posts;
                 });
             } else {
@@ -53,6 +54,23 @@ app.factory('postService', [
                 _id: postId
             });
         };
+
+        postService.getPostCategories = function() {
+            if (!postCategories) {
+                return fetchCategories().then(function() {
+                    return postCategories;
+                });
+            } else {
+                return $q.when(postCategories);
+            }
+        };
+
+        function fetchCategories() {
+            return $http.get('/api/posts/categories').then(function (result) {
+                postCategories = result.data;
+                return postCategories;
+            });
+        }
 
         function fetchPosts() {
             return $http.get('/api/posts').then(function (result) {
