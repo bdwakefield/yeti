@@ -1,9 +1,13 @@
 extends layout
 
 block content
-    != styleContent
+    head
+        title=title
+        meta(name="viewport", content="width=device-width", initial-scale=1)
+        != styleContent
 
-    div#content(ui-view)
-        != bodyContent
+    body
+        div#content
+            != bodyContent
 
-    != scriptsContent
+            != scriptsContent
