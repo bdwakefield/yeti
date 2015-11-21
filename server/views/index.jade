@@ -1,5 +1,8 @@
 extends layout
 
+include mixins/blogPost
+include mixins/regularContent
+
 block content
     head
         title=title
@@ -8,6 +11,10 @@ block content
 
     body
         div#content
-            != bodyContent
+            each item in bodyContent
+                if item.posts
+                    +blog(item.posts)
+                else
+                    +regularContent(item.content)
 
             != scriptsContent

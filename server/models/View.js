@@ -46,8 +46,8 @@ View.getView = function(view) {
                     bodyContent.body.content = viewify(view, result);
                     bodyContent.id = view;
 
-                    cache.set(view, bodyContent);
-                    deferred.resolve(bodyContent);
+                    cache.set(view, result);
+                    deferred.resolve(result);
                 });
             });
         }
@@ -179,14 +179,13 @@ function parseView(content) {
             var innerDeferred = Q.defer();
             var blockId = match.replace(/\{\{\-|\}\}/g, '');
             blocks.getBlock(blockId).then(function (result) {
-                content = content.replace(match, blockify(blockId, result.content));
-                innerDeferred.resolve(content);
+                innerDeferred.resolve(result);
             });
             promises.push(innerDeferred.promise);
         });
 
-        Q.all(promises).then(function () {
-            deferred.resolve(content);
+        Q.all(promises).then(function (result) {
+            deferred.resolve(result);
         });
     } else {
         deferred.resolve(content);

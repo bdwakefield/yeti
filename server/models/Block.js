@@ -44,12 +44,15 @@ Block.getBlock = function(block) {
         Block.findOne({'_id': ObjectId(block)}).lean().exec(function (err, result) {
             if (err) deferred.reject(err);
 
+            var matchedPosts = [];
+
             if (result.type === 'blog') {
                 Posts.getAllPosts().then(function (posts) {
                     var postCount = 0;
                     var newContent = '<div class="posts">';
                     _.each(posts, function(post) {
                         if (_.includes(result.displayedCategories, post.category) && postCount < result.numPosts) {
+                            matchedPosts.push(post);
                             newContent += '<div id="' + post._id + '" class="post">';
                             if (result.displayTitles) {
                                 newContent += '<div class="title">';
@@ -71,7 +74,9 @@ Block.getBlock = function(block) {
                         displayedCategories: result.displayedCategories
                     };
                     cache.set(block, newContent);
-                    deferred.resolve(newContent);
+                    deferred.resolve({
+                        posts: matchedPosts
+                    });
                 });
             } else {
                 var bodyContent = result || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};

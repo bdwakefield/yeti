@@ -21,6 +21,7 @@ var Styles = require('../models/Style');
 var Scripts = require('../models/Scripts');
 var View = require('../models/View');
 var Block = require('../models/Block');
+var Posts = require('../models/Post');
 var Uglify = require("uglify-js");
 var inq = require('inquirer');
 var Q = require('q');
@@ -48,7 +49,7 @@ utils.obfuscateJs = function(code) {
     return Uglify.minify(ast.print_to_string(), {fromString: true}).code;
 };
 
-utils.buildPage = function(viewId) {
+utils.buildPage = function(viewId, params) {
     var bodyContent;
 
     return Styles.getAllStyles().then(function(result) {
@@ -93,14 +94,32 @@ utils.buildPage = function(viewId) {
             return content;
         });
     }).then(function(content) {
-        return View.getView(viewId).then(function(result) {
-            bodyContent = result.body.content;
-            return {
-                bodyContent: bodyContent,
-                styleContent: content.styleContent.replace(/\n/g, ''),
-                scriptsContent: content.scriptsContent
-            };
-        });
+        if (params.action === 'blog') {
+            return Posts.getAllPosts().then(function (posts) {
+                var matchedPosts = {
+                    posts: []
+                };
+                _.each(posts, function(post) {
+                    if (params.cat === post.category || params.author == post.author) {
+                        matchedPosts.posts.push(post);
+                    }
+                });
+                return({
+                    bodyContent: [matchedPosts],
+                    styleContent: content.styleContent.replace(/\n/g, ''),
+                    scriptsContent: content.scriptsContent
+                });
+            });
+        } else {
+            return View.getView(viewId).then(function (result) {
+                bodyContent = result;
+                return {
+                    bodyContent: bodyContent,
+                    styleContent: content.styleContent.replace(/\n/g, ''),
+                    scriptsContent: content.scriptsContent
+                };
+            });
+        }
     });
 };
 

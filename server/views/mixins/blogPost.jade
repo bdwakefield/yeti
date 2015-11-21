@@ -1,0 +1,9 @@
+mixin blog(posts)
+    div.posts
+        each post in posts
+            div.post-title=post.title
+            div.post-info
+                span.post-detail!='<a href="?action=blog&author=' + post.author + '">' + post.author + '</a>'
+                span.post-detail!='<a href="?action=blog&cat=' + post.category + '">' + post.category + '</a>'
+            article.post-body
+                div.post-content!= post.content
