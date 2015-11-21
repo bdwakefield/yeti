@@ -23,6 +23,7 @@ app.controller('blocksController', [
     '$http',
     '$timeout',
     '$mdDialog',
+    '$mdBottomSheet',
     'loaderService',
     'blockService',
     'postService',
@@ -35,12 +36,15 @@ app.controller('blocksController', [
         $http,
         $timeout,
         $mdDialog,
+        $mdBottomSheet,
         loaderService,
         blockService,
         postService,
         $mdToast
     ) {
-        $scope.model = {};
+        $scope.model = {
+            blockType: 'blog'
+        };
 
         var editor = $('div#editor');
 
@@ -55,12 +59,14 @@ app.controller('blocksController', [
                 blockId: $scope.model.currentBlockId
             };
 
-            if (!$scope.model.isBlog) {
+            if ($scope.model.currentBlock.type === 'content') {
                 postData.blockContent = editor.froalaEditor('html.get');
-            } else {
+            } else if ($scope.model.currentBlock.type === 'blog') {
                 postData.numPosts = $scope.model.blockSettings.numToDisplay;
                 postData.displayTitles = $scope.model.blockSettings.displayTitles;
                 postData.displayedCategories = $scope.model.blockSettings.displayedCategories;
+            } else if ($scope.model.currentBlock.type === 'expert') {
+                postData.blockContent = $scope.model.currentBlock.content;
             }
 
             $http({
@@ -131,6 +137,9 @@ app.controller('blocksController', [
                 $mdDialog.hide();
                 if (result && result.data._id) {
                     initLoad(result.data._id);
+                    $mdBottomSheet.hide();
+                    $scope.model.blockType = 'blog';
+                    $scope.model.blockName = '';
                 }
             }).catch(function(err) {
                 console.log(err);
@@ -146,6 +155,29 @@ app.controller('blocksController', [
                 targetEvent: ev,
                 clickOutsideToClose: true
             });
+        };
+
+        $scope.showBottomSheet = function(ev) {
+            $mdBottomSheet.show({
+                templateUrl: '/javascript/app/blocks/addBlockBottomSheet.html',
+                scope: $scope,
+                preserveScope: true,
+                clickOutsideToClose: true,
+                targetEvent: ev
+            });
+        };
+
+        $scope.isSelectedType = function(type) {
+            return $scope.model.blockType === type ? 'md-raised' : '';
+        };
+
+        $scope.selectType = function(type) {
+            $scope.model.blockType = type;
+        };
+
+        $scope.aceLoaded = function(editor) {
+            editor.setTheme("ace/theme/github");
+            editor.getSession().setMode("ace/mode/html");
         };
 
         function initLoad(blockId) {
@@ -175,10 +207,7 @@ app.controller('blocksController', [
                     displayTitles: currentBlock.displayTitles,
                     displayedCategories: currentBlock.displayedCategories || []
                 };
-                $scope.model.isBlog = true;
-            } else {
-                $scope.model.isBlog = false;
-
+            } else if (currentBlock.type === 'content') {
                 editor.froalaEditor({
                     toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'color', 'emoticons', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'insertLink', 'insertImage', 'insertVideo', 'insertFile', 'insertTable', '|', 'quote', 'insertHR', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html']
                 });

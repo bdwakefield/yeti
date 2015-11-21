@@ -19,7 +19,7 @@ var config = require('../config/index');
 var mongoose = require('mongoose');
 var BlockSchema = require('./BlockSchema');
 var Block = mongoose.model(config.collections.blocks, BlockSchema);
-var posts = require('./Post');
+var Posts = require('./Post');
 var cache = require('../lib/cache');
 var Q = require('q');
 var _ = require('lodash');
@@ -45,17 +45,19 @@ Block.getBlock = function(block) {
             if (err) deferred.reject(err);
 
             if (result.type === 'blog') {
-                posts.getAllPosts().then(function (posts) {
+                Posts.getAllPosts().then(function (posts) {
                     var postCount = 0;
                     var newContent = '<div class="posts">';
                     _.each(posts, function(post) {
                         if (_.includes(result.displayedCategories, post.category) && postCount < result.numPosts) {
+                            newContent += '<div id="' + post._id + '" class="post">';
                             if (result.displayTitles) {
-                                newContent += '<div id="' + post._id + '" class="title">';
+                                newContent += '<div class="title">';
                                 newContent += post.title;
                                 newContent += '</div><div class="time">Posted on ' + moment(post._id.getTimestamp().toISOString()).format('MM-DD-YYYY') + ' in <i>' + post.category + '</i> by ' + post.author + '</div>';
                             }
                             newContent += '<div class="body">' + post.content + '</div>';
+                            newContent += '</div>';
                             postCount++;
                         }
                     });
@@ -126,7 +128,7 @@ Block.addBlock = function(blockName, blockType) {
         type: blockType
     };
 
-    if (blockType === 'content') {
+    if (blockType === 'content' || blockType === 'expert') {
         blockObj.content = '';
     }
 

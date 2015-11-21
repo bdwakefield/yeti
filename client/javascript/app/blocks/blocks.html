@@ -23,13 +23,13 @@
                     </md-input-container>
                 </div>
                 <div flex="35">
-                    <md-button class="add-button" ng-click="showConfirm($event)"><i class="fa fa-plus-square"></i>Create Block</md-button>
+                    <md-button class="add-button" ng-click="showBottomSheet($event)"><i class="fa fa-plus-square"></i>Create Block</md-button>
                 </div>
             </div>
         </div>
 
         <!-- If blog post block -->
-        <div flex="100" class="control-panel-item" ng-if="model.isBlog">
+        <div flex="100" class="control-panel-item" ng-if="model.currentBlock.type === 'blog'">
             <div flex="100">
                 <h4 class="control-panel-item-heading">Select a Block</h4>
             </div>
@@ -70,10 +70,13 @@
         <md-button class="md-primary save-icon" aria-label="Save" ng-click="saveBlock()"><i class="fa fa-floppy-o fa-2x"></i></md-button>
 
         <!-- If regular block -->
-        <div id="editor" ng-show="!model.isBlog"></div>
+        <div id="editor" ng-show="model.currentBlock.type === 'content'"></div>
+
+        <!-- If expert block -->
+        <div ng-if="model.currentBlock.type === 'expert'" ui-ace="{ onLoad: aceLoaded }" ng-model="model.currentBlock.content"></div>
 
         <!-- If blog post block -->
-        <div ng-if="model.isBlog">
+        <div ng-if="model.currentBlock.type === 'blog'">
             <h4>Please use settings menu to the left for blog posts block.</h4>
         </div>
     </div>

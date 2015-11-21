@@ -25,10 +25,11 @@ var Q = require('q');
 var _ = require('lodash');
 
 Post.getAllPosts = function() {
-    return Post.find({}).lean().exec(function(err, posts) {
+    var deferred = Q.defer();
+    Post.find({}).lean().exec(function(err, posts) {
         if (err) return err;
 
-        return User.find().lean().exec(function(err, users) {
+        User.find().lean().exec(function(err, users) {
             if (err) return err;
 
             // Todo: Determine why lodash _.each does not contain users in scope (even when passing in this)
@@ -40,9 +41,11 @@ Post.getAllPosts = function() {
                 }), 'username');
             }
 
-            return posts;
+            deferred.resolve(posts);
         }, this);
     });
+
+    return deferred.promise;
 };
 
 Post.getPost = function(post) {

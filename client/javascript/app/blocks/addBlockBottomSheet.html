@@ -1,0 +1,23 @@
+<md-bottom-sheet aria-label="Add New Block" style="padding: 0; border: none;">
+    <md-toolbar>
+        <div class="md-toolbar-tools" style="margin:0;">
+            <h2>Add New Block</h2>
+        </div>
+    </md-toolbar>
+    <md-content style="padding: 25px 25px 125px 25px;">
+        <div>
+            <form>
+                <div id="toggle-container">
+                    <md-button class="md-primary toggle-button" ng-class="isSelectedType('blog')" ng-click="selectType('blog')"><i class="fa fa-rss fa-3x"></i>Blog Posts</md-button>
+                    <md-button class="md-primary toggle-button" ng-class="isSelectedType('content')" ng-click="selectType('content')"><i class="fa fa-object-group fa-3x"></i>Visual Content</md-button>
+                    <md-button class="md-primary toggle-button" ng-class="isSelectedType('expert')" ng-click="selectType('expert')"><i class="fa fa-magic fa-3x"></i>Expert Content</md-button>
+                </div>
+
+                <md-input-container>
+                    <label>Block Name</label><input type="text" class="form-control" ng-model="model.blockName" id="blockName" placeholder="Block Name">
+                </md-input-container>
+                <md-button class="control-panel-button" ng-click="addBlock()">Add Block</md-button>
+            </form>
+        </div>
+    </md-content>
+</md-bottom-sheet>

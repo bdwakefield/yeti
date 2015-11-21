@@ -16,3 +16,30 @@ body {
 #sample-footer a {
     color: #f8f8f8;
 }
+.post {
+    padding: 15px;
+    margin: 15px;
+    width: 75%;
+}
+.post .title {
+    background-color: rgb(230,230,230);
+    padding: 10px;
+    font-size: 1.3em;
+    font-family: sans-serif;
+    margin: 10px;
+}
+.post .time {
+    background-color: transparent;
+    padding: 10px;
+    font-size: 0.8em;
+    font-family: sans-serif;
+    margin: -10px 15px 15px 15px;
+    border-bottom: 1px solid rgb(230,230,230);
+}
+.post .body {
+    background-color: transparent;
+    padding: 10px;
+    font-size: 1.2em;
+    font-family: sans-serif;
+    margin: -10px 15px 15px 15px;
+}

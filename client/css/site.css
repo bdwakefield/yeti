@@ -385,3 +385,10 @@ md-fab-speed-dial md-fab-trigger {
     font-variant: small-caps;
     font-family: sans-serif;
 }
+#toggle-container {
+    margin: 15px;
+}
+.toggle-button {
+    margin: -3px;
+    padding: 10px;
+}
