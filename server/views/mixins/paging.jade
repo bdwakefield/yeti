@@ -2,7 +2,7 @@ mixin paging(paging)
     - var i = 1
     - var currentPage = +paging.current
     div.post-page
-        if !paging.category && !paging.author
+        if !paging.category && !paging.author && !paging.post
             if (currentPage - 1) > 0
                 !='<a class="post-page-arrow" href="?action=blog&page=' + (currentPage - 1) + '"><</a>'
             else

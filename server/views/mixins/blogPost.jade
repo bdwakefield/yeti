@@ -2,7 +2,7 @@ mixin blog(posts, paging)
     div.posts
         +paging(paging)
         each post in posts
-            div.post-title=post.title
+            div.post-title!='<a href="?action=blog&post=' + post._id + '">' + post.title + '</a>'
             div.post-info
                 span.post-detail!='<a href="?action=blog&author=' + post.author + '">' + post.author + '</a>'
                 span.post-detail!='<a href="?action=blog&cat=' + post.category + '">' + post.category + '</a>'

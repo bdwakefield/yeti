@@ -54,7 +54,8 @@ Block.getBlock = function(block, params) {
                         if (
                             (params.action !== 'blog' && _.includes(result.displayedCategories, post.category)) ||
                             (params.action === 'blog' && (params.cat === post.category || params.author == post.author)) ||
-                            (params.action === 'blog' && !params.cat && !params.author && _.includes(result.displayedCategories, post.category))
+                            (params.action === 'blog' && !params.cat && !params.author && !params.post && _.includes(result.displayedCategories, post.category)) ||
+                            (params.action === 'blog' && post._id.toString() === params.post)
                         ) {
                             matchedPosts.push(post);
                             postCount++;
@@ -78,7 +79,8 @@ Block.getBlock = function(block, params) {
                             total: posts.length,
                             current: params.page || 1,
                             category: params.cat,
-                            author: params.author
+                            author: params.author,
+                            post: params.post
                         }
                     });
                 });
