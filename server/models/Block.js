@@ -53,17 +53,20 @@ Block.getBlock = function(block, params) {
                     _.each(posts, function(post) {
                         if (
                             (params.action !== 'blog' && _.includes(result.displayedCategories, post.category)) ||
-                            (params.action === 'blog' && (params.cat === post.category || params.author == post.author || _.includes(result.displayedCategories, post.category)))
+                            (params.action === 'blog' && (params.cat === post.category || params.author == post.author)) ||
+                            (params.action === 'blog' && !params.cat && !params.author && _.includes(result.displayedCategories, post.category))
                         ) {
                             matchedPosts.push(post);
                             postCount++;
                         }
                     });
-                    if (params && params.page) {
-                        var pageMin = result.numPosts * (params.page-1);
+                    if (!params.cat && !params.author) {
+                        var reqPage = params.page || 1;
+                        var pageMin = result.numPosts * (reqPage - 1);
                         var pageMax = pageMin + result.numPosts;
                         matchedPosts = matchedPosts.slice(pageMin, pageMax);
                     }
+
                     if (params.action !== 'blog') {
                         cache.set(block, matchedPosts);
                     }
@@ -73,7 +76,9 @@ Block.getBlock = function(block, params) {
                         paging: {
                             pages: Math.ceil(posts.length / result.numPosts),
                             total: posts.length,
-                            current: params.page
+                            current: params.page || 1,
+                            category: params.cat,
+                            author: params.author
                         }
                     });
                 });
