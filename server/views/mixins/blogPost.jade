@@ -1,24 +1,6 @@
 mixin blog(posts, paging)
     div.posts
-        - var i = 1
-        - var currentPage = +paging.current
-        div.post-page
-            if !paging.category && !paging.author
-                if (currentPage - 1) > 0
-                    !='<a class="post-page-arrow" href="?action=blog&page=' + (currentPage-1) + '"><</a>'
-                else
-                    | <
-                while i <= paging.pages
-                    - var isCurrent = currentPage === +i
-                    span.post-page-number
-                        if isCurrent
-                            =i++
-                        else
-                            !='<a href="?action=blog&page=' + i + '">' + i++ + '</a>'
-                if (currentPage + 1) <= +paging.pages
-                    !='<a class="post-page-arrow" href="?action=blog&page=' + (currentPage + 1) + '">></a>'
-                else
-                    | >
+        +paging(paging)
         each post in posts
             div.post-title=post.title
             div.post-info
@@ -27,3 +9,4 @@ mixin blog(posts, paging)
                 span.post-detail!='Modified: ' + post.date.modified
             article.post-body
                 div.post-content!= post.content
+        +paging(paging)
