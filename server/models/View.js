@@ -207,12 +207,4 @@ function parseView(content, params) {
     return deferred.promise;
 }
 
-function blockify(id, content) {
-    return '<div id="' + id + '" class="dash-block">' + content + '</div>';
-}
-
-function viewify(id, content) {
-    return '<div id="' + id + '" class="dash-view">' +  content + '</div>';
-}
-
 module.exports = View;

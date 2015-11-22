@@ -20,6 +20,7 @@ var mongoose = require('mongoose');
 var BlockSchema = require('./BlockSchema');
 var Block = mongoose.model(config.collections.blocks, BlockSchema);
 var Posts = require('./Post');
+var widgets = require('../lib/widget');
 var cache = require('../lib/cache');
 var Q = require('q');
 var _ = require('lodash');
@@ -86,9 +87,28 @@ Block.getBlock = function(block, params) {
                 });
             } else {
                 var bodyContent = result || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};
+                var reg = /\{\{\-([\s\S]*?)\}\}/gm;
+                var promises = [];
 
+                var matches = result.content.match(reg);
+
+                if (matches) {
+                    matches.forEach(function (match) {
+                        var innerDeferred = Q.defer();
+                        var widgetName = match.replace(/\{\{\-|\}\}/g, '');
+                        widgets.get(widgetName).then(function (content) {
+                            bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
+                            innerDeferred.resolve();
+                        });
+                        promises.push(innerDeferred.promise);
+                    });
+                    Q.all(promises).then(function () {
+                        deferred.resolve(bodyContent);
+                    });
+                } else {
+                    deferred.resolve(bodyContent);
+                }
                 cache.set(block, bodyContent);
-                deferred.resolve(bodyContent);
             }
         });
     }
