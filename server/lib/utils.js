@@ -94,32 +94,14 @@ utils.buildPage = function(viewId, params) {
             return content;
         });
     }).then(function(content) {
-        if (params.action === 'blog') {
-            return Posts.getAllPosts().then(function (posts) {
-                var matchedPosts = {
-                    posts: []
-                };
-                _.each(posts, function(post) {
-                    if (params.cat === post.category || params.author == post.author) {
-                        matchedPosts.posts.push(post);
-                    }
-                });
-                return({
-                    bodyContent: [matchedPosts],
-                    styleContent: content.styleContent.replace(/\n/g, ''),
-                    scriptsContent: content.scriptsContent
-                });
-            });
-        } else {
-            return View.getView(viewId).then(function (result) {
-                bodyContent = result;
-                return {
-                    bodyContent: bodyContent,
-                    styleContent: content.styleContent.replace(/\n/g, ''),
-                    scriptsContent: content.scriptsContent
-                };
-            });
-        }
+        return View.getView(viewId, params).then(function (result) {
+            bodyContent = result;
+            return {
+                bodyContent: bodyContent,
+                styleContent: content.styleContent.replace(/\n/g, ''),
+                scriptsContent: content.scriptsContent
+            };
+        });
     });
 };
 

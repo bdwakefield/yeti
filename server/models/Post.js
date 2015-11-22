@@ -17,6 +17,7 @@
 
 var config = require('../config/index');
 var mongoose = require('mongoose');
+var moment = require('moment');
 var PostSchema = require('./PostSchema');
 var Post = mongoose.model(config.collections.posts, PostSchema);
 var User = require('./User');
@@ -26,7 +27,7 @@ var _ = require('lodash');
 
 Post.getAllPosts = function() {
     var deferred = Q.defer();
-    Post.find({}).lean().exec(function(err, posts) {
+    Post.find({}).sort({'date.modified':'desc'}).lean().exec(function(err, posts) {
         if (err) return err;
 
         User.find().lean().exec(function(err, users) {
@@ -34,6 +35,8 @@ Post.getAllPosts = function() {
 
             // Todo: Determine why lodash _.each does not contain users in scope (even when passing in this)
             for (var i=0; i<posts.length; i++) {
+                posts[i].date.created = moment(posts[i].date.created.toISOString()).format('MM-DD-YYYY h:mm a');
+                posts[i].date.modified = moment(posts[i].date.modified.toISOString()).format('MM-DD-YYYY h:mm a');
                 posts[i].author = _.result(_.find(users, function(user) {
                     if (posts[i].author) {
                         return user._id.toString() === posts[i].author.toString();
@@ -79,7 +82,8 @@ Post.postPost = function(postId, postContent, postCategory) {
     return Post.findOneAndUpdate({_id: postId},{
         $set: {
             content: postContent,
-            category: postCategory
+            category: postCategory,
+            'date.modified': new Date().toLocaleString()
         }
     }, {
         safe: true,
@@ -92,7 +96,11 @@ Post.addPost = function(postName, author) {
     var post = new Post({
         title: postName,
         author: author,
-        content: ''
+        content: '',
+        date: {
+            created: new Date().toLocaleString(),
+            modified: new Date().toLocaleString()
+        }
     });
     return post.save();
 };

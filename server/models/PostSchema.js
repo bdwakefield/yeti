@@ -22,7 +22,11 @@ var PostSchema = mongoose.Schema({
     category: String,
     title: String,
     author: ObjectId,
-    content: String
+    content: String,
+    date: {
+        created: Date,
+        modified: Date
+    }
 });
 
 module.exports = PostSchema;

@@ -24,12 +24,12 @@ var blocks = require('./Block');
 var Q = require('q');
 var _ = require('lodash');
 
-View.getView = function(view) {
+View.getView = function(view, params) {
     var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
     if (view) {
-        var cachedView = cache.get(view);
+        var cachedView = (params && params.action !== 'blog') ? cache.get(view) : undefined;
 
         if (cachedView) {
             deferred.resolve(cachedView);
@@ -42,11 +42,13 @@ View.getView = function(view) {
                         content: ''
                     }
                 };
-                parseView(result.content).then(function (result) {
-                    bodyContent.body.content = viewify(view, result);
+                parseView(result.content, params).then(function (result) {
+                    bodyContent.body.content = result;
                     bodyContent.id = view;
 
-                    cache.set(view, result);
+                    if (params && params.action !== 'blog') {
+                        cache.set(view, result);
+                    }
                     deferred.resolve(result);
                 });
             });
@@ -166,26 +168,38 @@ function updateView(viewId, viewContent, viewRoute, viewIsDefault) {
     }).exec();
 }
 
-function parseView(content) {
+function parseView(content, params) {
     var deferred = Q.defer();
     var promises = [];
+    var filteredBlogsShown = false;
 
     var reg = /\{\{\-([\s\S]*?)\}\}/gm;
 
     var matches = content.match(reg);
 
-    if(matches) {
+    if (matches) {
         matches.forEach(function (match) {
             var innerDeferred = Q.defer();
             var blockId = match.replace(/\{\{\-|\}\}/g, '');
-            blocks.getBlock(blockId).then(function (result) {
-                innerDeferred.resolve(result);
+            blocks.getBlock(blockId, params).then(function (result) {
+                // The following safeguards against blog post blocks posting for every single one on the page in the case of a filter selected by the user
+                // ie: There are 4 blog post blocks on the post and user clicks a category, this prevents it from showing matching posts times four
+                if (
+                    (result.type !== 'blog') ||
+                    (params && params.action === 'blog' && result.type === 'blog' && !filteredBlogsShown) ||
+                    (params && params.action !== 'blog')
+                ) {
+                    filteredBlogsShown = (params && params.action === 'blog' && result.type === 'blog');
+                    innerDeferred.resolve(result);
+                } else {
+                    innerDeferred.resolve();
+                }
             });
             promises.push(innerDeferred.promise);
         });
 
         Q.all(promises).then(function (result) {
-            deferred.resolve(result);
+            deferred.resolve(_(result).omit(_.isUndefined).value());
         });
     } else {
         deferred.resolve(content);

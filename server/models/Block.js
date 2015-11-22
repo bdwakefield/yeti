@@ -32,11 +32,11 @@ Block.getAllBlocks = function() {
     });
 };
 
-Block.getBlock = function(block) {
+Block.getBlock = function(block, params) {
     var deferred = Q.defer();
     var ObjectId = mongoose.Types.ObjectId;
 
-    var cachedBlock = cache.get(block);
+    var cachedBlock = (params && params.action !== 'blog') ? cache.get(block) : undefined;
 
     if (cachedBlock) {
         deferred.resolve(cachedBlock);
@@ -49,33 +49,32 @@ Block.getBlock = function(block) {
             if (result.type === 'blog') {
                 Posts.getAllPosts().then(function (posts) {
                     var postCount = 0;
-                    var newContent = '<div class="posts">';
+
                     _.each(posts, function(post) {
-                        if (_.includes(result.displayedCategories, post.category) && postCount < result.numPosts) {
+                        if (
+                            (params.action !== 'blog' && _.includes(result.displayedCategories, post.category)) ||
+                            (params.action === 'blog' && (params.cat === post.category || params.author == post.author || _.includes(result.displayedCategories, post.category)))
+                        ) {
                             matchedPosts.push(post);
-                            newContent += '<div id="' + post._id + '" class="post">';
-                            if (result.displayTitles) {
-                                newContent += '<div class="title">';
-                                newContent += post.title;
-                                newContent += '</div><div class="time">Posted on ' + moment(post._id.getTimestamp().toISOString()).format('MM-DD-YYYY') + ' in <i>' + post.category + '</i> by ' + post.author + '</div>';
-                            }
-                            newContent += '<div class="body">' + post.content + '</div>';
-                            newContent += '</div>';
                             postCount++;
                         }
                     });
-                    newContent += '</div>';
-                    newContent = {
-                        type: result.type,
-                        title: result.title,
-                        content: newContent,
-                        numPosts: result.numPosts,
-                        displayTitles: result.displayTitles,
-                        displayedCategories: result.displayedCategories
-                    };
-                    cache.set(block, newContent);
+                    if (params && params.page) {
+                        var pageMin = result.numPosts * (params.page-1);
+                        var pageMax = pageMin + result.numPosts;
+                        matchedPosts = matchedPosts.slice(pageMin, pageMax);
+                    }
+                    if (params.action !== 'blog') {
+                        cache.set(block, matchedPosts);
+                    }
                     deferred.resolve({
-                        posts: matchedPosts
+                        posts: matchedPosts,
+                        type: 'blog',
+                        paging: {
+                            pages: Math.ceil(posts.length / result.numPosts),
+                            total: posts.length,
+                            current: params.page
+                        }
                     });
                 });
             } else {
