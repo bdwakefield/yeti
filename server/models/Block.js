@@ -86,28 +86,8 @@ Block.getBlock = function(block, params) {
                     });
                 });
             } else {
-                var bodyContent = result || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};
-                var reg = /\{\{\-([\s\S]*?)\}\}/gm;
-                var promises = [];
-
-                var matches = result.content.match(reg);
-
-                if (matches) {
-                    matches.forEach(function (match) {
-                        var innerDeferred = Q.defer();
-                        var widgetName = match.replace(/\{\{\-|\}\}/g, '');
-                        widgets.get(widgetName).then(function (content) {
-                            bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
-                            innerDeferred.resolve();
-                        });
-                        promises.push(innerDeferred.promise);
-                    });
-                    Q.all(promises).then(function () {
-                        deferred.resolve(bodyContent);
-                    });
-                } else {
-                    deferred.resolve(bodyContent);
-                }
+                var bodyContent = widgetify(result) || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};
+                deferred.resolve(bodyContent);
                 cache.set(block, bodyContent);
             }
         });
@@ -182,5 +162,31 @@ Block.deleteBlock = function(blockId) {
 
     return deferred.promise;
 };
+
+function widgetify(bodyContent) {
+    var deferred = Q.defer();
+    var reg = /\{\{\-([\s\S]*?)\}\}/gm;
+    var promises = [];
+
+    var matches = bodyContent.content.match(reg);
+
+    if (matches) {
+        matches.forEach(function (match) {
+            var innerDeferred = Q.defer();
+            var widgetName = match.replace(/\{\{\-|\}\}/g, '');
+            widgets.get(widgetName).then(function (content) {
+                bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
+                innerDeferred.resolve();
+            });
+            promises.push(innerDeferred.promise);
+        });
+        Q.all(promises).then(function () {
+            deferred.resolve(bodyContent);
+        });
+    } else {
+        deferred.resolve(bodyContent);
+    }
+    return deferred.promise;
+}
 
 module.exports = Block;
