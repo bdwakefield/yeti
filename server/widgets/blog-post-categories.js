@@ -22,12 +22,12 @@ var Posts = require('../models/Post');
 module.exports = {
     export: function() {
         var deferred = Q.defer();
-        var output = '<div id="blog-posts-list"><span id="blog-posts-list-title">Most Recent Posts</span>';
-        output += '<ul id="blog-posts-list-items">';
-        Posts.getAllPosts().then(function(posts) {
-            _.forEach(posts.slice(0,5), function(post) {
-                var correctedPost = (post.title.length > 25) ? post.title.substr(0, 25) + '...' : post.title;
-                output += processPost('<a href="?action=blog&post=' + post._id + '">' + correctedPost + '</a>');
+        var output = '<div id="blog-posts-categories"><span id="blog-posts-categories-title">Top Categories</span>';
+        output += '<ul id="blog-posts-categories-items">';
+        Posts.getCategories().then(function(categories) {
+            _.forEach(categories.slice(0,5), function(category) {
+                var correctedCategory = (category.length > 25) ? category.substr(0, 25) + '...' : category;
+                output += processPost('<a href="?action=blog&cat=' + category + '">' + correctedCategory + '</a>');
             });
             output += '</ul></div>';
             deferred.resolve(output);
