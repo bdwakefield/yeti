@@ -1,4 +1,4 @@
 coverage/
 node_modules/
 client/libs/
-server/config/default.json
+server/config/

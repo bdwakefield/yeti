@@ -23,6 +23,7 @@ app.controller('stylesController', [
     '$http',
     'loaderService',
     'styleService',
+    'viewService',
     '$mdDialog',
     '$mdToast',
     function(
@@ -33,10 +34,13 @@ app.controller('stylesController', [
         $http,
         loaderService,
         styleService,
+        viewService,
         $mdDialog,
         $mdToast
     ) {
-        $scope.model = {};
+        $scope.model = {
+            selectedViews: []
+        };
         $scope.model.styles = [];
 
         $scope.model.options = {
@@ -59,7 +63,10 @@ app.controller('stylesController', [
                     $scope.model.currentStyleId = styleId;
                 }
 
-                loaderService.hide();
+                viewService.getViews().then(function(views) {
+                    $scope.model.views = views;
+                    loaderService.hide();
+                });
             });
         }
 
@@ -77,7 +84,8 @@ app.controller('stylesController', [
                     enabled: $scope.model.currentStyle.enabled,
                     styleId: $scope.model.currentStyleId,
                     styleContent: $scope.model.currentStyle.content,
-                    styleType: $scope.model.currentStyle.type
+                    styleType: $scope.model.currentStyle.type,
+                    appliedTo: $scope.model.selectedViews
                 }
             }).success(function(result) {
                 if (result === 204) {
@@ -95,6 +103,19 @@ app.controller('stylesController', [
 
         $scope.gotoStyle = function(id) {
             buildStyle(id || $scope.model.currentStyleId);
+        };
+
+        $scope.toggleView = function(view) {
+            var idx = $scope.model.selectedViews.indexOf(view);
+            if (~idx) {
+                $scope.model.selectedViews.splice(idx, 1);
+            } else {
+                $scope.model.selectedViews.push(view);
+            }
+        };
+
+        $scope.viewExists = function(view) {
+            return ~$scope.model.currentStyle.appliedTo.indexOf(view);
         };
 
         $scope.deleteStyle = function(ev) {

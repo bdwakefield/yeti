@@ -60,12 +60,13 @@ Style.getStyle = function(style) {
     }
 };
 
-Style.postStyle = function(enabled, styleId, styleContent, styleType) {
+Style.postStyle = function(enabled, styleId, styleContent, styleType, appliedTo) {
     return Style.findOneAndUpdate({_id: styleId},{
         $set: {
             enabled: enabled,
             type: styleType,
-            content: styleContent
+            content: styleContent,
+            appliedTo: appliedTo
         }
     }, {
         safe: true,
@@ -79,7 +80,8 @@ Style.addStyle = function(styleType, styleName) {
         enabled: true,
         type: styleType,
         title: styleName,
-        content: ''
+        content: '',
+        appliedTo: []
     });
     return style.save(function(err) {
         if (err) return Q.reject(err);

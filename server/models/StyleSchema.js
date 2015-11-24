@@ -21,7 +21,8 @@ var CssSchema = mongoose.Schema({
     enabled: Boolean,
     type: String,
     title: String,
-    content: String
+    content: String,
+    appliedTo: Array
 });
 
 module.exports = CssSchema;

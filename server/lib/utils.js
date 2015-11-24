@@ -56,7 +56,7 @@ utils.buildPage = function(viewId, params) {
         var styleContent = '<style>';
         var linkContent = '';
         _.each(result, function(style) {
-            if (style.enabled) {
+            if (style.enabled && ~style.appliedTo.indexOf(viewId.toString())) {
                 var code = style.content;
 
                 if (style.type === 'code') {

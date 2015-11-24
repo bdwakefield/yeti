@@ -34,7 +34,7 @@ router.get('/:styleId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    Style.postStyle(req.body.enabled, req.body.styleId, req.body.styleContent, req.body.styleType).then(function (result) {
+    Style.postStyle(req.body.enabled, req.body.styleId, req.body.styleContent, req.body.styleType, req.body.appliedTo).then(function (result) {
         cache.flush();
         res.json(204);
     });
