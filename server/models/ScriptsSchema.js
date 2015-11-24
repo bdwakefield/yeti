@@ -21,7 +21,8 @@ var ScriptsSchema = mongoose.Schema({
     enabled: Boolean,
     title: String,
     type: String,
-    content: String
+    content: String,
+    appliedTo: Array
 });
 
 module.exports = ScriptsSchema;

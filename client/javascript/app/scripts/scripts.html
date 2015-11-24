@@ -35,6 +35,19 @@
             </md-switch>
         </div>
 
+        <div flex="100" class="control-panel-item">
+            <div flex="100">
+                <h4 class="control-panel-item-heading">Select views to apply script to</h4>
+            </div>
+            <md-virtual-repeat-container style="height: 300px; width: 100%;">
+                <div md-virtual-repeat="view in model.views" class="repeated-item" flex>
+                    <md-checkbox ng-checked="viewExists(view.id)" ng-click="toggleView(view.id)" aria-label="Selected Views">
+                        {{view.title}}
+                    </md-checkbox>
+                </div>
+            </md-virtual-repeat-container>
+        </div>
+
     </div>
 </control-panel>
 

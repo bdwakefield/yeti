@@ -77,7 +77,7 @@ utils.buildPage = function(viewId, params) {
             var codeContent = '<script>';
             var linkContent = '';
             _.each(result, function (script) {
-                if (script.enabled) {
+                if (script.enabled && ~script.appliedTo.indexOf(viewId.toString())) {
                     var code = script.content;
 
                     if (script.type === 'code') {

@@ -60,14 +60,15 @@ Scripts.getScript = function(script) {
     }
 };
 
-Scripts.postScript = function(enabled, scriptId, scriptContent, scriptType) {
+Scripts.postScript = function(enabled, scriptId, scriptContent, scriptType, appliedTo) {
     return Scripts.findOneAndUpdate({
         _id: scriptId
     },{
         $set: {
             enabled: enabled,
             type: scriptType,
-            content: scriptContent
+            content: scriptContent,
+            appliedTo: appliedTo
         }
     }, {
         safe: true,
@@ -81,7 +82,8 @@ Scripts.addScript = function(scriptType, scriptName) {
         enabled: true,
         type: scriptType,
         title: scriptName,
-        content: ''
+        content: '',
+        appliedTo: []
     });
     return scripts.save(function(err) {
         if (err) return Q.reject(err);

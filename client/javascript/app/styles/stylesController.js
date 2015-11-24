@@ -39,9 +39,9 @@ app.controller('stylesController', [
         $mdToast
     ) {
         $scope.model = {
-            selectedViews: []
+            selectedViews: [],
+            styles: []
         };
-        $scope.model.styles = [];
 
         $scope.model.options = {
             allowedContent: true,
@@ -65,6 +65,7 @@ app.controller('stylesController', [
 
                 viewService.getViews().then(function(views) {
                     $scope.model.views = views;
+                    $scope.model.selectedViews = $scope.model.currentStyle.appliedTo;
                     loaderService.hide();
                 });
             });
@@ -73,6 +74,7 @@ app.controller('stylesController', [
         function buildStyle(id) {
             var currentStyle = styleService.getStyleById(id || styleService.getSelectedStyleId());
             $scope.model.currentStyle = currentStyle;
+            $scope.model.selectedViews = $scope.model.currentStyle.appliedTo;
             $scope.model.styleType = currentStyle.type;
         }
 
@@ -115,7 +117,7 @@ app.controller('stylesController', [
         };
 
         $scope.viewExists = function(view) {
-            return ~$scope.model.currentStyle.appliedTo.indexOf(view);
+            return ~$scope.model.selectedViews.indexOf(view);
         };
 
         $scope.deleteStyle = function(ev) {

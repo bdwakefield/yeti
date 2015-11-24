@@ -34,7 +34,7 @@ router.get('/:scriptId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    Scripts.postScript(req.body.enabled, req.body.scriptId, req.body.scriptContent, req.body.scriptType).then(function (result) {
+    Scripts.postScript(req.body.enabled, req.body.scriptId, req.body.scriptContent, req.body.scriptType, req.body.appliedTo).then(function (result) {
         cache.flush();
         res.json(204);
     });

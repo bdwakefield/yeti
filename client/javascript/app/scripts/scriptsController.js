@@ -23,6 +23,7 @@ app.controller('scriptsController', [
     '$http',
     'loaderService',
     'scriptService',
+    'viewService',
     '$mdDialog',
     '$mdToast',
     function(
@@ -33,11 +34,14 @@ app.controller('scriptsController', [
         $http,
         loaderService,
         scriptService,
+        viewService,
         $mdDialog,
         $mdToast
     ) {
-        $scope.model = {};
-        $scope.model.scripts = [];
+        $scope.model = {
+            selectedViews: [],
+            scripts: []
+        };
 
         $scope.model.options = {
             allowedContent: true,
@@ -59,15 +63,33 @@ app.controller('scriptsController', [
                     $scope.model.currentScriptId = scriptId;
                 }
 
-                loaderService.hide();
+                viewService.getViews().then(function(views) {
+                    $scope.model.views = views;
+                    $scope.model.selectedViews = $scope.model.currentScript.appliedTo;
+                    loaderService.hide();
+                });
             });
         }
 
         function buildScript(id) {
             var currentScript = scriptService.getScriptById(id || scriptService.getSelectedScriptId());
             $scope.model.currentScript = currentScript;
+            $scope.model.selectedViews = $scope.model.currentScript.appliedTo;
             $scope.model.scriptType = currentScript.type;
         }
+
+        $scope.toggleView = function(view) {
+            var idx = $scope.model.selectedViews.indexOf(view);
+            if (~idx) {
+                $scope.model.selectedViews.splice(idx, 1);
+            } else {
+                $scope.model.selectedViews.push(view);
+            }
+        };
+
+        $scope.viewExists = function(view) {
+            return ~$scope.model.selectedViews.indexOf(view);
+        };
 
         $scope.saveScript = function() {
             $http({
@@ -77,7 +99,8 @@ app.controller('scriptsController', [
                     enabled: $scope.model.currentScript.enabled,
                     scriptId: $scope.model.currentScriptId,
                     scriptContent: $scope.model.currentScript.content,
-                    scriptType: $scope.model.currentScript.type
+                    scriptType: $scope.model.currentScript.type,
+                    appliedTo: $scope.model.selectedViews
                 }
             }).success(function(result) {
                 if (result === 204) {
