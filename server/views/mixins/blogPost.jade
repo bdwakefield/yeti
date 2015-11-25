@@ -8,9 +8,13 @@ mixin blog(settings, posts, paging)
                 span.post-detail!='<a href="?action=blog&cat=' + post.category + '">' + post.category + '</a>'
                 span.post-detail!='Modified: ' + post.date.modified
             article.post-body
-                div.post-content!= post.content
-            if paging.post
-                +disqus(settings.disqusAccount, post._id)
+                if paging.post
+                    div.post-content!= post.content
+                    +disqus(settings.disqusAccount, post._id)
+                else
+                    - var limitedPostContent = (post.content.length > 500) ? post.content.substr(0, 500) + '... <a href="?action=blog&post=' + post._id + '">[more]</a>' : post.content;
+                    div.post-content!= limitedPostContent
+
         +paging(paging)
 
     script#dsq-count-scr(src='//' + settings.disqusAccount + '/count.js' async)
