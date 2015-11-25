@@ -97,6 +97,7 @@ utils.buildPage = function(viewId, params) {
         return View.getView(viewId, params).then(function (result) {
             bodyContent = result;
             return {
+                title: bodyContent.title,
                 bodyContent: bodyContent,
                 styleContent: content.styleContent.replace(/\n/g, ''),
                 scriptsContent: content.scriptsContent

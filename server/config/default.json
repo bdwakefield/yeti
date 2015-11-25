@@ -9,6 +9,7 @@
         "styles": "styles",
         "scripts": "scripts"
     },
+    "disqusAccount": "thomrichardsonblog.disqus.com",
     "secretPhrase": "yeti",
     "tokenTimeout": 60,
     "imageTypes": [
@@ -17,5 +18,9 @@
         "tiff",
         "png",
         "svg"
-    ]
+    ],
+    "port": 3000,
+    "dbServer": "mongodb://127.0.0.1",
+    "dbPort": 27017,
+    "dbDatabase": "yeti"
 }

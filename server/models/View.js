@@ -37,15 +37,14 @@ View.getView = function(view, params) {
             View.findOne({"_id": ObjectId(view)}).lean().exec(function (err, result) {
                 if (err) console.log(err);
 
+                var viewTitle = result.title;
                 var bodyContent = {
                     body: {
                         content: ''
                     }
                 };
                 parseView(result.content, params).then(function (result) {
-                    bodyContent.body.content = result;
-                    bodyContent.id = view;
-
+                    result.title = viewTitle;
                     if (params && params.action !== 'blog') {
                         cache.set(view, result);
                     }
