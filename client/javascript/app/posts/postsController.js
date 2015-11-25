@@ -26,6 +26,7 @@ app.controller('postsController', [
     'postService',
     '$mdToast',
     '$timeout',
+    'localStorageService',
     function(
         $rootScope,
         $scope,
@@ -36,7 +37,8 @@ app.controller('postsController', [
         loaderService,
         postService,
         $mdToast,
-        $timeout
+        $timeout,
+        localStorageService
     ) {
         var editor = $('div#editor');
         $scope.model = {};
@@ -44,7 +46,8 @@ app.controller('postsController', [
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'postsDefault' || toState.name === 'posts') {
-                initLoad();
+                var postId = localStorageService.get('postId');
+                initLoad(postId || null);
             }
         });
 
@@ -89,8 +92,9 @@ app.controller('postsController', [
             }, 350);
         }
 
-        $scope.gotoPost = function(id) {
-            buildPost(id || $scope.model.currentPostId);
+        $scope.gotoPost = function(postId) {
+            localStorageService.set('postId', postId || $scope.model.currentPostId);
+            buildPost(postId || $scope.model.currentPostId);
         };
 
         $scope.savePost = function() {

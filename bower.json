@@ -30,7 +30,8 @@
     "jquery": "~2.1.4",
     "lodash": "~3.10.1",
     "angular-ui-ace": "bower",
-    "Snap.js": "snapjs#~v2.0.0-rc1"
+    "Snap.js": "snapjs#~v2.0.0-rc1",
+    "angular-local-storage": "~0.2.3"
   },
   "resolutions": {
     "angular-material": "master"

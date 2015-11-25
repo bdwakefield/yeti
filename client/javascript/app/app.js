@@ -20,17 +20,20 @@ var app = angular.module('yeti', [
     'ngCookies',
     'ngMaterial',
     'wu.masonry',
-    'ui.ace'
+    'ui.ace',
+    'LocalStorageModule'
 ]);
 
 app.config([
     '$stateProvider',
     '$urlRouterProvider',
     '$mdThemingProvider',
+    'localStorageServiceProvider',
     function(
         $stateProvider,
         $urlRouterProvider,
-        $mdThemingProvider
+        $mdThemingProvider,
+        localStorageServiceProvider
     ) {
         $mdThemingProvider.definePalette('yeti', {
             '50': 'f8f8f8',
@@ -58,6 +61,9 @@ app.config([
                 'hue-1': '50',
                 'hue-2': '100'
             });
+
+        localStorageServiceProvider
+            .setPrefix('yeti');
 
         $urlRouterProvider.otherwise('/');
 

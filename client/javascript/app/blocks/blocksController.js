@@ -28,6 +28,7 @@ app.controller('blocksController', [
     'blockService',
     'postService',
     '$mdToast',
+    'localStorageService',
     function(
         $rootScope,
         $scope,
@@ -40,7 +41,8 @@ app.controller('blocksController', [
         loaderService,
         blockService,
         postService,
-        $mdToast
+        $mdToast,
+        localStorageService
     ) {
         $scope.model = {
             blockType: 'blog'
@@ -50,7 +52,11 @@ app.controller('blocksController', [
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'blocksDefault' || toState.name === 'blocks') {
-                initLoad($stateParams.blockId || null);
+                if ($stateParams.blockId) {
+                    localStorageService.set('blockId', $stateParams.blockId);
+                }
+                var blockId = localStorageService.get('blockId');
+                initLoad($stateParams.blockId || blockId || null);
             }
         });
 
@@ -111,8 +117,9 @@ app.controller('blocksController', [
             });
         };
 
-        $scope.gotoBlock = function(id) {
-            buildBlock(id || $scope.model.currentBlockId);
+        $scope.gotoBlock = function(blockId) {
+            localStorageService.set('blockId', blockId || $scope.model.currentBlockId);
+            buildBlock(blockId || $scope.model.currentBlockId);
         };
 
         $scope.toggle = function (item, list) {

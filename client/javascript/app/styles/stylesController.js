@@ -26,6 +26,7 @@ app.controller('stylesController', [
     'viewService',
     '$mdDialog',
     '$mdToast',
+    'localStorageService',
     function(
         $rootScope,
         $scope,
@@ -36,7 +37,8 @@ app.controller('stylesController', [
         styleService,
         viewService,
         $mdDialog,
-        $mdToast
+        $mdToast,
+        localStorageService
     ) {
         $scope.model = {
             selectedViews: [],
@@ -47,6 +49,13 @@ app.controller('stylesController', [
             allowedContent: true,
             extraPlugins: 'save'
         };
+
+        $scope.$on('$stateChangeSuccess', function(event, toState) {
+            if (toState.name === 'stylesDefault' || toState.name === 'styles') {
+                var styleId = localStorageService.get('styleId');
+                initLoad(styleId || null);
+            }
+        });
 
         function initLoad(styleId) {
             loaderService.show();
@@ -103,8 +112,9 @@ app.controller('stylesController', [
             });
         };
 
-        $scope.gotoStyle = function(id) {
-            buildStyle(id || $scope.model.currentStyleId);
+        $scope.gotoStyle = function(styleId) {
+            localStorageService.set('styleId', styleId || $scope.model.currentStyleId);
+            buildStyle(styleId || $scope.model.currentStyleId);
         };
 
         $scope.toggleView = function(view) {
@@ -148,12 +158,6 @@ app.controller('stylesController', [
             editor.setTheme("ace/theme/github");
             editor.getSession().setMode("ace/mode/css");
         };
-
-        $scope.$on('$stateChangeSuccess', function(event, toState) {
-            if (toState.name === 'stylesDefault' || toState.name === 'styles') {
-                initLoad();
-            }
-        });
 
         $scope.addStyle = function() {
             $http({

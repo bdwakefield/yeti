@@ -28,6 +28,7 @@ app.controller('viewsController', [
     '$q',
     '$mdToast',
     'blockService',
+    'localStorageService',
     function(
         $rootScope,
         viewService,
@@ -40,7 +41,8 @@ app.controller('viewsController', [
         $sce,
         $q,
         $mdToast,
-        blockService
+        blockService,
+        localStorageService
     ) {
         $scope.model = {};
 
@@ -48,7 +50,8 @@ app.controller('viewsController', [
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'viewsDefault' || toState.name === 'views') {
-                initLoad();
+                var viewId = localStorageService.get('viewId');
+                initLoad(viewId || null);
             }
         });
 
@@ -185,6 +188,7 @@ app.controller('viewsController', [
         };
 
         $scope.gotoView = function(viewId) {
+            localStorageService.set('viewId', viewId || $scope.model.currentViewId);
             buildView(viewId || $scope.model.currentViewId);
             $scope.model.currentView = viewService.getViewById(viewId || $scope.model.currentViewId);
         };

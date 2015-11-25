@@ -26,6 +26,7 @@ app.controller('scriptsController', [
     'viewService',
     '$mdDialog',
     '$mdToast',
+    'localStorageService',
     function(
         $rootScope,
         $scope,
@@ -36,7 +37,8 @@ app.controller('scriptsController', [
         scriptService,
         viewService,
         $mdDialog,
-        $mdToast
+        $mdToast,
+        localStorageService
     ) {
         $scope.model = {
             selectedViews: [],
@@ -47,6 +49,13 @@ app.controller('scriptsController', [
             allowedContent: true,
             extraPlugins: 'save'
         };
+
+        $scope.$on('$stateChangeSuccess', function(event, toState) {
+            if (toState.name === 'scriptsDefault' || toState.name === 'scripts') {
+                var scriptId = localStorageService.get('scriptId');
+                initLoad(scriptId || null);
+            }
+        });
 
         function initLoad(scriptId) {
             loaderService.show();
@@ -116,8 +125,9 @@ app.controller('scriptsController', [
             });
         };
 
-        $scope.gotoScript = function(id) {
-            buildScript(id || $scope.model.currentScriptId);
+        $scope.gotoScript = function(scriptId) {
+            localStorageService.set('scriptId', scriptId || $scope.model.currentScriptId);
+            buildScript(scriptId || $scope.model.currentScriptId);
         };
 
         $scope.deleteScript = function(ev) {
@@ -148,12 +158,6 @@ app.controller('scriptsController', [
             editor.setTheme("ace/theme/github");
             editor.getSession().setMode("ace/mode/css");
         };
-
-        $scope.$on('$stateChangeSuccess', function(event, toState) {
-            if (toState.name === 'scriptsDefault' || toState.name === 'scripts') {
-                initLoad();
-            }
-        });
 
         $scope.addScript = function() {
             $http({
