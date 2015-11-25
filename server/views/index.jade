@@ -3,6 +3,7 @@ extends layout
 include mixins/blogPost
 include mixins/regularContent
 include mixins/paging
+include mixins/diqus
 
 block content
     head
@@ -14,7 +15,7 @@ block content
         div#content
             each item in bodyContent
                 if item.posts
-                    +blog(item.posts, item.paging)
+                    +blog(item.settings, item.posts, item.paging)
                 else
                     +regularContent(item.content)
 

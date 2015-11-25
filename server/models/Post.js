@@ -108,7 +108,8 @@ Post.addPost = function(postName, author) {
         date: {
             created: new Date().toLocaleString(),
             modified: new Date().toLocaleString()
-        }
+        },
+        category: ''
     });
     return post.save();
 };

@@ -1,12 +1,16 @@
-mixin blog(posts, paging)
+mixin blog(settings, posts, paging)
     div.posts
         +paging(paging)
         each post in posts
-            div.post-title!='<a href="?action=blog&post=' + post._id + '">' + post.title + '</a>'
+            div.post-title!='<a href="?action=blog&post=' + post._id + '">' + post.title + '</a><span class="comment-counts"><span class="disqus-comment-count" data-disqus-identifier="' + post._id + '"></span></span>'
             div.post-info
                 span.post-detail!='<a href="?action=blog&author=' + post.author + '">' + post.author + '</a>'
                 span.post-detail!='<a href="?action=blog&cat=' + post.category + '">' + post.category + '</a>'
                 span.post-detail!='Modified: ' + post.date.modified
             article.post-body
                 div.post-content!= post.content
+            if paging.post
+                +disqus(settings.disqusAccount, post._id)
         +paging(paging)
+
+    script#dsq-count-scr(src='//' + settings.disqusAccount + '/count.js' async)

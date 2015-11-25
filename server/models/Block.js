@@ -75,6 +75,9 @@ Block.getBlock = function(block, params) {
                     deferred.resolve({
                         posts: matchedPosts,
                         type: 'blog',
+                        settings: {
+                            disqusAccount: config.disqusAccount
+                        },
                         paging: {
                             pages: Math.ceil(posts.length / result.numPosts),
                             total: posts.length,
@@ -174,7 +177,7 @@ function widgetify(bodyContent) {
         matches.forEach(function (match) {
             var innerDeferred = Q.defer();
             var widgetName = match.replace(/\{\{\-|\}\}/g, '');
-            widgets.get(widgetName).then(function (content) {
+            widgets.get(widgetName, bodyContent).then(function (content) {
                 bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
                 innerDeferred.resolve();
             });
