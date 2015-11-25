@@ -109,8 +109,9 @@ Post.addPost = function(postName, author) {
             created: new Date().toLocaleString(),
             modified: new Date().toLocaleString()
         },
-        category: ''
+        category: 'New Posts'
     });
+    cache.flush();
     return post.save();
 };
 
