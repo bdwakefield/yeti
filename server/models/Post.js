@@ -27,26 +27,34 @@ var _ = require('lodash');
 
 Post.getAllPosts = function() {
     var deferred = Q.defer();
-    Post.find({}).sort({'date.modified':'desc'}).lean().exec(function(err, posts) {
-        if (err) return err;
 
-        User.find().lean().exec(function(err, users) {
+    var cachedPosts = cache.get('allPosts');
+
+    if (cachedPosts) {
+        return Q(cachedPosts);
+    } else {
+        Post.find({}).sort({'date.modified': 'desc'}).lean().exec(function (err, posts) {
             if (err) return err;
 
-            // Todo: Determine why lodash _.each does not contain users in scope (even when passing in this)
-            for (var i=0; i<posts.length; i++) {
-                posts[i].date.created = moment(posts[i].date.created.toISOString()).format('MM-DD-YYYY h:mm a');
-                posts[i].date.modified = moment(posts[i].date.modified.toISOString()).format('MM-DD-YYYY h:mm a');
-                posts[i].author = _.result(_.find(users, function(user) {
-                    if (posts[i].author) {
-                        return user._id.toString() === posts[i].author.toString();
-                    }
-                }), 'username');
-            }
+            User.find().lean().exec(function (err, users) {
+                if (err) return err;
 
-            deferred.resolve(posts);
-        }, this);
-    });
+                // Todo: Determine why lodash _.each does not contain users in scope (even when passing in this)
+                for (var i = 0; i < posts.length; i++) {
+                    posts[i].date.created = moment(posts[i].date.created.toISOString()).format('MM-DD-YYYY h:mm a');
+                    posts[i].date.modified = moment(posts[i].date.modified.toISOString()).format('MM-DD-YYYY h:mm a');
+                    posts[i].author = _.result(_.find(users, function (user) {
+                        if (posts[i].author) {
+                            return user._id.toString() === posts[i].author.toString();
+                        }
+                    }), 'username');
+                }
+
+                cache.set('allPosts', posts);
+                deferred.resolve(posts);
+            }, this);
+        });
+    }
 
     return deferred.promise;
 };
