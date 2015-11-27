@@ -12,11 +12,10 @@ block content
         != styleContent
 
     body
-        div#content
-            each item in bodyContent
-                if item.posts
-                    +blog(item.settings, item.posts, item.paging)
-                else
-                    +regularContent(item.content)
+        each item in bodyContent
+            if item.posts
+                +blog(item.settings, item.posts, item.paging)
+            else
+                +regularContent(item.content)
 
         != scriptsContent
