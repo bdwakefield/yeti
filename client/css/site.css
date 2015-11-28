@@ -13,14 +13,6 @@ body, html {
     height: 50px;
     margin-right: 55px;
 }
-#adminSidebar {
-    position: fixed;
-    z-index: 9;
-    margin-top: 0;
-    background-color: rgb(21,101,192);
-    height: 100vh;
-    box-shadow: 5px 0 30px -5px #333;
-}
 #adminSidebarContent {
     background-color: transparent;
 }
@@ -299,8 +291,8 @@ md-fab-speed-dial md-fab-trigger {
     width: 155px;
     height: 40px;
     min-width: 0;
-    border: 2px rgb(21, 101, 192) solid;
-    color: rgb(21, 101, 192);
+    border: 2px #333333 solid;
+    color: #333333;
 }
 #page-content-wrapper {
     width: 100%;
@@ -329,7 +321,7 @@ md-fab-speed-dial md-fab-trigger {
     margin-top: -10px;
     min-width: 0;
     padding: 5px 15px 5px 0;
-    color: rgb(21, 101, 192);
+    color: #333333;
 }
 #control-panel-content {
     padding: 0;
@@ -350,8 +342,8 @@ md-fab-speed-dial md-fab-trigger {
     min-width: 0;
     width: 230px;
     height: 45px;
-    border: 2px rgb(21, 101, 192) solid;
-    color: rgb(21, 101, 192);
+    border: 2px #333333 solid;
+    color: #333333;
 }
 .red-button {
     min-width: 0;

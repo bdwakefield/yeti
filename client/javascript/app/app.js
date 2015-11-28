@@ -44,7 +44,7 @@ app.config([
             '500': '0d47a1',
             '600': '0d47a1',
             '700': '0d47a1',
-            '800': '0d47a1',
+            '800': '333333',
             '900': '0d47a1',
             'A100': '0d47a1',
             'A200': '0d47a1',
@@ -53,13 +53,8 @@ app.config([
             'contrastDefaultColor': 'light'
         });
         $mdThemingProvider.theme('default')
-            .primaryPalette('blue', {
+            .primaryPalette('yeti', {
                 'default': '800'
-            })
-            .accentPalette('yeti', {
-                'default': '500',
-                'hue-1': '50',
-                'hue-2': '100'
             });
 
         localStorageServiceProvider
