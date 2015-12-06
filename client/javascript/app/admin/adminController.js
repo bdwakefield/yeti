@@ -20,16 +20,18 @@ app.controller('adminController', [
     '$scope',
     '$state',
     'viewService',
+    'userService',
     function(
         $rootScope,
         $scope,
         $state,
-        viewService
+        viewService,
+        userService
     ) {
         $rootScope.isLoading = false;
 
         $scope.$on('$viewContentLoaded', function() {
-            $scope.refreshAuth().catch(function() {
+            userService.refreshAuth().catch(function() {
                 $state.go('login');
             });
         });

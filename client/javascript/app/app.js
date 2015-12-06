@@ -130,16 +130,22 @@ app.config([
             })
 }])
 .run([
-        '$rootScope',
-        '$state',
+    '$rootScope',
+    '$state',
+    'userService',
     function(
         $rootScope,
-        $state
+        $state,
+        userService
     ) {
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState) {
-        $state.previous = fromState;
-        $rootScope.current = toState.name.charAt(0).toUpperCase() + toState.name.slice(1);
-    });
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState) {
+            $state.previous = fromState;
+            $rootScope.current = toState.name.charAt(0).toUpperCase() + toState.name.slice(1);
+
+            userService.refreshAuth().catch(function() {
+                $state.go('login');
+            });
+        });
 }]);
 
 

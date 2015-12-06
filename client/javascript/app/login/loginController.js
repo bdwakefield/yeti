@@ -19,17 +19,19 @@ app.controller('loginController', [
     '$rootScope',
     '$scope',
     '$state',
+    'userService',
     function(
         $rootScope,
         $scope,
-        $state
+        $state,
+        userService
     ) {
         $scope.loginSubmit = function() {
             $scope.loginError = {};
-            $scope.verifyUser($scope.inputUser, $scope.inputPassword).then(function(result) {
+            userService.verifyUser($scope.inputUser, $scope.inputPassword).then(function(result) {
                 if (result.data.success) {
                     delete $scope.loginError.message;
-                    $scope.setToken($scope.inputUser, result.data.token);
+                    userService.setToken($scope.inputUser, result.data.token);
                     $state.go($state.previous.name || 'home');
                 } else {
                     $scope.loginError.message = 'Username and/or password incorrect.';

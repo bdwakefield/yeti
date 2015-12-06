@@ -76,6 +76,7 @@ html(lang="en", ng-app="yeti")
         script(src='/javascript/app/services/styleService.js')
         script(src='/javascript/app/services/scriptService.js')
         script(src='/javascript/app/services/loaderService.js')
+        script(src='/javascript/app/services/userService.js')
         script(src='/javascript/app/directives/userBar.js')
         script(src='/javascript/app/directives/controlPanel.js')
         script(src='/javascript/app/login/loginController.js')
@@ -89,6 +90,6 @@ html(lang="en", ng-app="yeti")
         script(src='/javascript/app/gallery/galleryController.js')
         //script(src='/javascript/dist/all.js')
     body
-        div#mainBody(ng-controller='userController')
+        div#mainBody
             user-bar
             block content
