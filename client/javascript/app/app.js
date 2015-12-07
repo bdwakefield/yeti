@@ -29,11 +29,13 @@ app.config([
     '$urlRouterProvider',
     '$mdThemingProvider',
     'localStorageServiceProvider',
+    '$httpProvider',
     function(
         $stateProvider,
         $urlRouterProvider,
         $mdThemingProvider,
-        localStorageServiceProvider
+        localStorageServiceProvider,
+        $httpProvider
     ) {
         $mdThemingProvider.definePalette('yeti', {
             '50': 'f8f8f8',
@@ -127,7 +129,9 @@ app.config([
                 url:'/gallery',
                 templateUrl: '/javascript/app/gallery/gallery.html',
                 controller: 'galleryController'
-            })
+            });
+
+        $httpProvider.interceptors.push('checkAuth');
 }])
 .run([
     '$rootScope',
