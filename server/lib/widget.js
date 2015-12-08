@@ -16,8 +16,5 @@
 'use strict';
 
 module.exports = {
-    get: function(reqWidget, caller) {
-        var widget = require('../widgets/' + reqWidget);
-        return widget.export(caller);
-    }
+    get: (reqWidget, caller) => require('../widgets/' + reqWidget).export(caller)
 };

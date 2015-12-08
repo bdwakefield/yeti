@@ -15,7 +15,6 @@
  */
 'use strict';
 
-var Q = require('q');
 var utils = require('./utils');
 var mongoose = require('mongoose');
 
@@ -29,20 +28,13 @@ var connectionOptions = {
 };
 
 module.exports = {
-    connect: function() {
-        var deferred = Q.defer();
-
-        utils.buildDbPath().then(function(path) {
-            mongoose.connect(path, connectionOptions ,function(err) {
-                if (err) deferred.reject(err);
-
-                deferred.resolve();
+    connect: () => new Promise(function(resolve, reject) {
+        utils.buildDbPath().then(path => {
+            mongoose.connect(path, connectionOptions, err => {
+                if (err) reject(err);
+                resolve();
             });
         });
-
-        return deferred.promise;
-    },
-    connected: function() {
-        return mongoose.connection.readyState;
-    }
+    }),
+    connected: () => mongoose.connection.readyState
 };
