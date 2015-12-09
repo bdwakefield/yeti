@@ -22,174 +22,162 @@ var Block = mongoose.model(config.collections.blocks, BlockSchema);
 var Posts = require('./Post');
 var widgets = require('../lib/widget');
 var cache = require('../lib/cache');
-var Q = require('q');
 var _ = require('lodash');
 var moment = require('moment');
 
-Block.getAllBlocks = function() {
-    return Block.find({}, function(err, views) {
-        if (err) return err;
-        return views;
+Block.getAllBlocks = () => Block.find({}, (err, views) => err ? err : views);
+
+Block.getBlock = (block, params) => {
+    return new Promise((resolve, reject) => {
+        var ObjectId = mongoose.Types.ObjectId;
+
+        var cachedBlock = (params && params.action !== 'blog') ? cache.get(block) : undefined;
+
+        if (cachedBlock) {
+            resolve(cachedBlock);
+        } else {
+            Block.findOne({'_id': ObjectId(block)}).lean().exec((err, result) => {
+                if (err) reject(err);
+
+                var matchedPosts = [];
+
+                if (result.type === 'blog') {
+                    Posts.getAllPosts().then(posts => {
+                        var postCount = 0;
+
+                        _.each(posts, post => {
+                            if (
+                                (params.action !== 'blog' && _.includes(result.displayedCategories, post.category)) ||
+                                (params.action === 'blog' && (params.cat === post.category || params.author == post.author)) ||
+                                (params.action === 'blog' && !params.cat && !params.author && !params.post && _.includes(result.displayedCategories, post.category)) ||
+                                (params.action === 'blog' && post._id.toString() === params.post)
+                            ) {
+                                matchedPosts.push(post);
+                                postCount++;
+                            }
+                        });
+                        if (!params.cat && !params.author) {
+                            var reqPage = params.page || 1;
+                            var pageMin = result.numPosts * (reqPage - 1);
+                            var pageMax = pageMin + result.numPosts;
+                            matchedPosts = matchedPosts.slice(pageMin, pageMax);
+                        }
+
+                        if (params.action !== 'blog') {
+                            cache.set(block, matchedPosts);
+                        }
+                        resolve({
+                            posts: matchedPosts,
+                            type: 'blog',
+                            settings: {
+                                disqusAccount: config.disqusAccount
+                            },
+                            paging: {
+                                pages: Math.ceil(posts.length / result.numPosts),
+                                total: posts.length,
+                                current: params.page || 1,
+                                category: params.cat,
+                                author: params.author,
+                                post: params.post
+                            }
+                        });
+                    });
+                } else {
+                    var bodyContent = widgetify(result) || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};
+                    resolve(bodyContent);
+                    cache.set(block, bodyContent);
+                }
+            });
+        }
     });
 };
 
-Block.getBlock = function(block, params) {
-    var deferred = Q.defer();
-    var ObjectId = mongoose.Types.ObjectId;
+Block.postBlock = args => {
+    return new Promise((resolve, reject) => {
+        var updateInstructions = {};
 
-    var cachedBlock = (params && params.action !== 'blog') ? cache.get(block) : undefined;
-
-    if (cachedBlock) {
-        deferred.resolve(cachedBlock);
-    } else {
-        Block.findOne({'_id': ObjectId(block)}).lean().exec(function (err, result) {
-            if (err) deferred.reject(err);
-
-            var matchedPosts = [];
-
-            if (result.type === 'blog') {
-                Posts.getAllPosts().then(function (posts) {
-                    var postCount = 0;
-
-                    _.each(posts, function(post) {
-                        if (
-                            (params.action !== 'blog' && _.includes(result.displayedCategories, post.category)) ||
-                            (params.action === 'blog' && (params.cat === post.category || params.author == post.author)) ||
-                            (params.action === 'blog' && !params.cat && !params.author && !params.post && _.includes(result.displayedCategories, post.category)) ||
-                            (params.action === 'blog' && post._id.toString() === params.post)
-                        ) {
-                            matchedPosts.push(post);
-                            postCount++;
-                        }
-                    });
-                    if (!params.cat && !params.author) {
-                        var reqPage = params.page || 1;
-                        var pageMin = result.numPosts * (reqPage - 1);
-                        var pageMax = pageMin + result.numPosts;
-                        matchedPosts = matchedPosts.slice(pageMin, pageMax);
-                    }
-
-                    if (params.action !== 'blog') {
-                        cache.set(block, matchedPosts);
-                    }
-                    deferred.resolve({
-                        posts: matchedPosts,
-                        type: 'blog',
-                        settings: {
-                            disqusAccount: config.disqusAccount
-                        },
-                        paging: {
-                            pages: Math.ceil(posts.length / result.numPosts),
-                            total: posts.length,
-                            current: params.page || 1,
-                            category: params.cat,
-                            author: params.author,
-                            post: params.post
-                        }
-                    });
-                });
-            } else {
-                var bodyContent = widgetify(result) || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};
-                deferred.resolve(bodyContent);
-                cache.set(block, bodyContent);
-            }
-        });
-    }
-
-    return deferred.promise;
-};
-
-Block.postBlock = function(args) {
-    var deferred = Q.defer();
-    var updateInstructions = {};
-
-    if (args.blockContent) {
-        updateInstructions = {
+        if (args.blockContent) {
+            updateInstructions = {
                 $set: {
                     content: args.blockContent
                 }
             };
-    }
-    if (args.numPosts) {
-        updateInstructions = {
+        }
+        if (args.numPosts) {
+            updateInstructions = {
                 $set: {
                     numPosts: args.numPosts,
                     displayTitles: args.displayTitles,
                     displayedCategories: args.displayedCategories
                 }
             };
-    }
+        }
 
-    Block.findOneAndUpdate({
-        _id: args.blockId
-    },updateInstructions, {
-        safe: true,
-        upsert: true,
-        new: true
-    }, function(err){
-        if (err) deferred.reject(err);
+        Block.findOneAndUpdate({
+            _id: args.blockId
+        }, updateInstructions, {
+            safe: true,
+            upsert: true,
+            new: true
+        }, err => {
+            if (err) reject(err);
 
-        cache.flush();
-        deferred.resolve(204);
+            cache.flush();
+            resolve(204);
+        });
     });
-    return deferred.promise;
 };
 
-Block.addBlock = function(blockName, blockType) {
-    var deferred = Q.defer();
-    var blockObj = {
-        title: blockName,
-        type: blockType
-    };
+Block.addBlock = (blockName, blockType) => {
+    return new Promise((resolve, reject) => {
+        var blockObj = {
+            title: blockName,
+            type: blockType
+        };
 
-    if (blockType === 'content' || blockType === 'expert') {
-        blockObj.content = '';
-    }
+        if (blockType === 'content' || blockType === 'expert') {
+            blockObj.content = '';
+        }
 
-    var block = new Block(blockObj);
-    block.save(function(err) {
-        if (err) deferred.reject(err);
-        deferred.resolve(block);
+        var block = new Block(blockObj);
+        block.save(function (err) {
+            if (err) reject(err);
+            resolve(block);
+        });
     });
-
-    return deferred.promise;
 };
 
-Block.deleteBlock = function(blockId) {
-    var deferred = Q.defer();
-
-    Block.find({_id:blockId}).remove().then(function(result) {
-        cache.flush();
-        deferred.resolve(result);
+Block.deleteBlock = blockId => {
+    return new Promise((resolve, reject) => {
+        Block.find({_id: blockId}).remove().then(result => {
+            cache.flush();
+            resolve(result);
+        });
     });
-
-    return deferred.promise;
 };
 
 function widgetify(bodyContent) {
-    var deferred = Q.defer();
-    var reg = /\{\{\-([\s\S]*?)\}\}/gm;
-    var promises = [];
+    return new Promise((resolve, reject) => {
+        var reg = /\{\{\-([\s\S]*?)\}\}/gm;
+        var promises = [];
 
-    var matches = bodyContent.content.match(reg);
+        var matches = bodyContent.content.match(reg);
 
-    if (matches) {
-        matches.forEach(function (match) {
-            var innerDeferred = Q.defer();
-            var widgetName = match.replace(/\{\{\-|\}\}/g, '');
-            widgets.get(widgetName, bodyContent).then(function (content) {
-                bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
-                innerDeferred.resolve();
+        if (matches) {
+            matches.forEach(match => {
+                promises.push(new Promise((resolve, reject) => {
+                    var widgetName = match.replace(/\{\{\-|\}\}/g, '');
+                    widgets.get(widgetName, bodyContent).then(content => {
+                        bodyContent.content = bodyContent.content.replace('{{-' + widgetName + '}}', content);
+                        resolve();
+                    });
+                }));
             });
-            promises.push(innerDeferred.promise);
-        });
-        Q.all(promises).then(function () {
-            deferred.resolve(bodyContent);
-        });
-    } else {
-        deferred.resolve(bodyContent);
-    }
-    return deferred.promise;
+            Promise.all(promises).then(() => resolve(bodyContent));
+        } else {
+            resolve(bodyContent);
+        }
+    });
 }
 
 module.exports = Block;

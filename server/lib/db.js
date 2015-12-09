@@ -28,7 +28,7 @@ var connectionOptions = {
 };
 
 module.exports = {
-    connect: () => new Promise(function(resolve, reject) {
+    connect: () => new Promise((resolve, reject) => {
         utils.buildDbPath().then(path => {
             mongoose.connect(path, connectionOptions, err => {
                 if (err) reject(err);
