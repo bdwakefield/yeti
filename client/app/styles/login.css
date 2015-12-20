@@ -1,0 +1,42 @@
+#loginPage {
+    display: table;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+}
+#loginContent {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 350px;
+    height: 350px;
+}
+#loginBox {
+    width: 350px;
+    margin: auto;
+}
+#loginPage md-content {
+    background: transparent;
+}
+#loginPage label {
+    color: #F8F8F8;
+}
+#loginPage input {
+    background: transparent;
+    color: #F8F8F8;
+    border-color: #707070;
+}
+#loginError {
+    color: #EF5454;
+    padding: 40px;
+    font-weight: lighter;
+    font-size: 1.5em;
+}
+#yetiIconLg {
+    width: 250px;
+    height: 250px;
+}

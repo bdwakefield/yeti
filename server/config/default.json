@@ -11,12 +11,16 @@
     },
     "disqusAccount": "thomrichardsonblog.disqus.com",
     "secretPhrase": "yeti",
-    "tokenTimeout": 60,
+    "tokenTimeout": 1,
     "imageTypes": [
         "jpg",
         "gif",
         "tiff",
         "png",
         "svg"
-    ]
+    ],
+    "port": 3000,
+    "dbServer": "mongodb://127.0.0.1",
+    "dbPort": 27017,
+    "dbDatabase": "yeti"
 }

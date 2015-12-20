@@ -23,6 +23,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var compress = require('compression');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var http = require('http');
 var inq = require('inquirer');
 var favicon = require('serve-favicon');
@@ -112,13 +113,20 @@ function startServer() {
     app.use(compress({
         threshold: 0
     }));
+
     app.use(bodyParser.json({limit: '50mb'}));
     app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
     app.use(cookieParser());
 
-    app.use(express.static(path.join(__dirname, 'client')));
-    app.use(favicon(path.join(__dirname, 'client', 'images', 'favicon.ico')));
+    //app.use(favicon(path.join(__dirname, 'client', 'images', 'favicon.ico')));
+
+    app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
     app.use('/admin', admin);
+    app.get('/admin/*', function(req, res) {
+        res.render('admin', {
+            layout: 'adminLayout.jade'
+        });
+    });
     app.use('/api/users', users);
     app.use('/api/views', views);
     app.use('/api/blocks', blocks);
@@ -127,6 +135,7 @@ function startServer() {
     app.use('/api/media', media);
     app.use('/api/styles', styles);
     app.use('/api/scripts', scripts);
+    app.use(express.static(path.join(__dirname, 'client')));
     app.use('/', routes);
 
     //app.locals.pretty = true;
