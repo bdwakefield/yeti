@@ -1,3 +1,9 @@
-<ul>
-    <li *ngFor="#view of model.views">{{view.title}}</li>
-</ul>
+<div *ngIf="!model.isSingleView">
+    <ul>
+        <li *ngFor="#view of model.views"><a [routerLink]="['Views', {id:view.id}]">{{view.title}}</a></li>
+    </ul>
+</div>
+
+<div *ngIf="model.isSingleView">
+    {{model.view.title}}
+</div>

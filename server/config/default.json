@@ -11,7 +11,7 @@
     },
     "disqusAccount": "thomrichardsonblog.disqus.com",
     "secretPhrase": "yeti",
-    "tokenTimeout": 1,
+    "tokenTimeout": 60,
     "imageTypes": [
         "jpg",
         "gif",

@@ -1,6 +1,7 @@
 import {Component} from 'angular2/core';
 import {AuthService} from "../services/auth.service";
 import {LoggerService} from "../services/logger.service";
+import {Router, RouterOutlet, ComponentInstruction} from 'angular2/router';
 
 @Component({
     templateUrl: 'app/templates/login.html',
@@ -10,7 +11,8 @@ import {LoggerService} from "../services/logger.service";
 export class LoginComponent {
     constructor(
         public auth: AuthService,
-        public logger: LoggerService
+        public logger: LoggerService,
+        private parentRouter:Router
     ) {}
 
     model = {
@@ -20,8 +22,8 @@ export class LoginComponent {
 
     login() {
         this.auth.login(this.model.userName, this.model.password)
-        .then(result => {
-            console.log(result);
+        .then(() => {
+            this.parentRouter.navigateByUrl('/admin');
         })
         .catch(err => {
             this.logger.error(err)

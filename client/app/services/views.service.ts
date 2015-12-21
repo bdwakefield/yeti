@@ -8,11 +8,17 @@ export class ViewsService {
     ) {}
 
     cache = {
-        viewPromise: undefined
+        views: undefined,
+        view: undefined
     };
 
     getViews() {
-        this.cache.viewPromise = this.cache.viewPromise || this.api.get('/api/views/edit');
-        return this.cache.viewPromise;
+        this.cache.views = this.cache.views || this.api.get('/api/views/edit');
+        return this.cache.views;
+    }
+
+    getView(id) {
+        this.cache.view = (this.cache.view && this.cache.view.id === id) ? this.cache.view : this.api.get('/api/views/edit/' + id);
+        return this.cache.view;
     }
 }

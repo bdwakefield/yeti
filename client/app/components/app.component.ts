@@ -9,15 +9,12 @@ import {AuthRouterOutletDirective} from "../directives/auth-router-outlet.direct
 import {ViewsComponent} from "./views.component";
 import {ApiService} from "../services/api.service";
 import {ViewsService} from "../services/views.service";
+import {BlocksService} from "../services/blocks.service";
+import {BlocksComponent} from "./blocks.component";
 
 @Component({
     selector: 'yeti',
-    template: `
-        <a [routerLink]="['Main']">Main</a>
-        <a [routerLink]="['Login']">Login</a>
-        <a [routerLink]="['Views']">Views</a>
-        <router-outlet></router-outlet>
-    `,
+    templateUrl: 'app/templates/app.html',
     styleUrls: ['app/styles/site.css'],
     directives: [
         ROUTER_DIRECTIVES,
@@ -27,14 +24,17 @@ import {ViewsService} from "../services/views.service";
         LoggerService,
         AuthService,
         ApiService,
-        ViewsService
+        ViewsService,
+        BlocksService
     ]
 })
 
 @RouteConfig([
     {path: '/admin', name: 'Main', component: MainComponent, useAsDefault: true},
     {path: '/admin/login', name: 'Login', component: LoginComponent},
-    {path: '/admin/views', name: 'Views', component: ViewsComponent}
+    {path: '/admin/views', name: 'Views', component: ViewsComponent},
+    {path: '/admin/views/:id', name: 'ViewById', component: ViewsComponent},
+    {path: '/admin/blocks', name: 'Blocks', component: BlocksComponent}
 ])
 
 export class AppComponent {}

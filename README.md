@@ -1,5 +1,5 @@
-<a href="http://yetijs.com"><img src="http://yetijs.com/images/yeti.svg" width="25%" height="25%"></a>
-# YetiJS - A Node CMS 
+<!--<a href="http://yetijs.com"><img src="http://yetijs.com/images/yeti.svg" width="25%" height="25%"></a>-->
+# YetiJS - A Node CMS
 [![Build Status](https://travis-ci.org/Enmadaio/yeti.svg?branch=develop)](https://travis-ci.org/Enmadaio/yeti)
 [![Coverage Status](https://coveralls.io/repos/Enmadaio/yeti/badge.svg?branch=master&service=github)](https://coveralls.io/github/Enmadaio/yeti?branch=master)
 [![David Dependencies](https://david-dm.org/enmadaio/yeti.svg)](https://david-dm.org/enmadaio/yeti.svg)
@@ -7,6 +7,9 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Enmadaio/yeti?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
 
 Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
+
+#Angular 2
+Coming soon! Check out the Angular2 branch for progress!
 
 #Features
 * WYSIWYG editing
@@ -28,7 +31,7 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
   * follow prompts to create config file and first user name
 8. Check out your new site at http://localhost:3000 (Where 3000 is the port your specified in setup prompts)
 
-#Screenshots
+<!--#Screenshots
 ####Views Screen
 <img src="http://www.yetijs.com/images/yeti-view-demo.jpg">
 ####Blog Post Block Setup
@@ -36,7 +39,7 @@ Yeti is a very fast and lightweight CMS built entirely in the MEAN stack.
 ####Real world benchmark of yetijs.com
 <img src="http://www.yetijs.com/images/demo-gtmetrix.jpg">
 ####WYSIWYG Editor
-<img src="http://www.yetijs.com/images/yeti-editor-demo.jpg">
+<img src="http://www.yetijs.com/images/yeti-editor-demo.jpg">-->
 
 More info coming soon, this is in very very early alpha. If you want to get involved just let me know.
 
