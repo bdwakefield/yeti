@@ -10,6 +10,7 @@ import {ViewsComponent} from "./views.component";
 import {ApiService} from "../services/api.service";
 import {ViewsService} from "../services/views.service";
 import {BlocksService} from "../services/blocks.service";
+import {TemplateService} from "../services/template.service";
 import {BlocksComponent} from "./blocks.component";
 
 @Component({
@@ -25,7 +26,8 @@ import {BlocksComponent} from "./blocks.component";
         AuthService,
         ApiService,
         ViewsService,
-        BlocksService
+        BlocksService,
+        TemplateService
     ]
 })
 
@@ -34,7 +36,8 @@ import {BlocksComponent} from "./blocks.component";
     {path: '/admin/login', name: 'Login', component: LoginComponent},
     {path: '/admin/views', name: 'Views', component: ViewsComponent},
     {path: '/admin/views/:id', name: 'ViewById', component: ViewsComponent},
-    {path: '/admin/blocks', name: 'Blocks', component: BlocksComponent}
+    {path: '/admin/blocks', name: 'Blocks', component: BlocksComponent},
+    {path: '/admin/blocks/:id', name: 'BlocksById', component: BlocksComponent}
 ])
 
 export class AppComponent {}

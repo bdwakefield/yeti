@@ -9,7 +9,7 @@ System.register(['angular2/core', "../services/api.service"], function(exports_1
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, api_service_1;
-    var ViewsService;
+    var BlocksService;
     return {
         setters:[
             function (core_1_1) {
@@ -19,30 +19,32 @@ System.register(['angular2/core', "../services/api.service"], function(exports_1
                 api_service_1 = api_service_1_1;
             }],
         execute: function() {
-            ViewsService = (function () {
-                function ViewsService(api) {
+            BlocksService = (function () {
+                function BlocksService(api) {
                     this.api = api;
                     this.cache = {
-                        views: undefined,
-                        view: undefined
+                        blockPromise: undefined
                     };
                 }
-                ViewsService.prototype.getViews = function () {
-                    this.cache.views = this.cache.views || this.api.get('/api/views/edit');
-                    return this.cache.views;
+                BlocksService.prototype.getBlock = function (id) {
+                    var _this = this;
+                    return new Promise(function (resolve, reject) {
+                        _this.cache.blockPromise = _this.cache.blockPromise || _this.api.get('/api/blocks');
+                        _this.cache.blockPromise.then(function (blocks) { return resolve(blocks.find(function (block) { return block._id === id; })); });
+                    });
                 };
-                ViewsService.prototype.getView = function (id) {
-                    this.cache.view = (this.cache.view && this.cache.view.id === id) ? this.cache.view : this.api.get('/api/views/edit/' + id);
-                    return this.cache.view;
+                BlocksService.prototype.getBlocks = function () {
+                    this.cache.blockPromise = this.cache.blockPromise || this.api.get('/api/blocks');
+                    return this.cache.blockPromise;
                 };
-                ViewsService = __decorate([
+                BlocksService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [api_service_1.ApiService])
-                ], ViewsService);
-                return ViewsService;
+                ], BlocksService);
+                return BlocksService;
             })();
-            exports_1("ViewsService", ViewsService);
+            exports_1("BlocksService", BlocksService);
         }
     }
 });
-//# sourceMappingURL=views.service.js.map
+//# sourceMappingURL=blocks.service.js.map

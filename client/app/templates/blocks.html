@@ -1,3 +1,9 @@
-<ul>
-    <li *ngFor="#block of model.blocks">{{block.title}}</li>
-</ul>
+<div *ngIf="!model.isSingleBlock">
+    <ul>
+        <li *ngFor="#block of model.blocks"><a [routerLink]="['Blocks', {id:block._id}]">{{block.title}}</a></li>
+    </ul>
+</div>
+
+<div *ngIf="model.isSingleBlock">
+    <div [innerHTML]="model.block"></div>
+</div>

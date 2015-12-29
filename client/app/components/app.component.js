@@ -1,16 +1,14 @@
-System.register(['angular2/core', 'angular2/router', './main.component', './login.component', '../services/logger.service', 'rxjs/add/operator/map', "../services/auth.service", "../directives/auth-router-outlet.directive", "./views.component", "../services/api.service", "../services/views.service", "../services/blocks.service", "./blocks.component"], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', './main.component', './login.component', '../services/logger.service', 'rxjs/add/operator/map', "../services/auth.service", "../directives/auth-router-outlet.directive", "./views.component", "../services/api.service", "../services/views.service", "../services/blocks.service", "../services/template.service", "./blocks.component"], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-            case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-            case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-            case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-        }
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, main_component_1, login_component_1, logger_service_1, auth_service_1, auth_router_outlet_directive_1, views_component_1, api_service_1, views_service_1, blocks_service_1, blocks_component_1;
+    var core_1, router_1, main_component_1, login_component_1, logger_service_1, auth_service_1, auth_router_outlet_directive_1, views_component_1, api_service_1, views_service_1, blocks_service_1, template_service_1, blocks_component_1;
     var AppComponent;
     return {
         setters:[
@@ -48,6 +46,9 @@ System.register(['angular2/core', 'angular2/router', './main.component', './logi
             function (blocks_service_1_1) {
                 blocks_service_1 = blocks_service_1_1;
             },
+            function (template_service_1_1) {
+                template_service_1 = template_service_1_1;
+            },
             function (blocks_component_1_1) {
                 blocks_component_1 = blocks_component_1_1;
             }],
@@ -69,7 +70,8 @@ System.register(['angular2/core', 'angular2/router', './main.component', './logi
                             auth_service_1.AuthService,
                             api_service_1.ApiService,
                             views_service_1.ViewsService,
-                            blocks_service_1.BlocksService
+                            blocks_service_1.BlocksService,
+                            template_service_1.TemplateService
                         ]
                     }),
                     router_1.RouteConfig([
@@ -77,7 +79,8 @@ System.register(['angular2/core', 'angular2/router', './main.component', './logi
                         { path: '/admin/login', name: 'Login', component: login_component_1.LoginComponent },
                         { path: '/admin/views', name: 'Views', component: views_component_1.ViewsComponent },
                         { path: '/admin/views/:id', name: 'ViewById', component: views_component_1.ViewsComponent },
-                        { path: '/admin/blocks', name: 'Blocks', component: blocks_component_1.BlocksComponent }
+                        { path: '/admin/blocks', name: 'Blocks', component: blocks_component_1.BlocksComponent },
+                        { path: '/admin/blocks/:id', name: 'BlocksById', component: blocks_component_1.BlocksComponent }
                     ]), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);

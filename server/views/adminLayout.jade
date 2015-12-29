@@ -13,9 +13,9 @@ html(lang="en")
         script(src='node_modules/angular2/bundles/angular2.dev.js')
         script(src='node_modules/angular2/bundles/router.dev.js')
         script(src='node_modules/angular2/bundles/http.dev.js')
+        script(src='node_modules/lodash/index.js')
 
-        script(src='https://code.jquery.com/jquery-2.1.4.min.js')
-        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+        script(src='app/generics.js')
 
         script.
             System.config({
@@ -29,7 +29,6 @@ html(lang="en")
             System.import('app/bootstrap')
                 .then(null, console.error.bind(console));
 
-        link(rel='stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
-        link(rel='stylesheet" href="app/styles/site.css')
+        link(rel='stylesheet' href='app/styles/styles.css')
     body
         block content
