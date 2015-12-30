@@ -4,25 +4,9 @@
             <img src="images/yeti_icon_only.svg" id="yetiIconLg">
 
             <form (ngSubmit)="login()" class="form-horizontal">
-            <fieldset>
-                <div class="form-group">
-                    <label for="userName" class="col-lg-3 control-label">User</label>
-                    <div class="col-lg-8">
-                        <input #userName [(ngModel)]="model.userName" class="form-control" id="userName" placeholder="user">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password" class="col-lg-3 control-label">Password</label>
-                    <div class="col-lg-8">
-                        <input #password [(ngModel)]="model.password" class="form-control" id="password" type="password" placeholder="password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-10 col-lg-offset-2">
-                        <button type="submit" class="btn btn-default">Login</button>
-                    </div>
-                </div>
-            </fieldset>
+                <input #userName [(ngModel)]="model.userName" class="form-control" id="userName" placeholder="User Name">
+                <input #password [(ngModel)]="model.password" class="form-control" id="password" type="password" placeholder="Password">
+                <button type="submit" class="btn btn-default">Login</button>
             </form>
         </div>
     </div>

@@ -23,7 +23,7 @@ export class ViewsComponent {
     model = {
         isSingleView: false,
         views: [],
-        view: {},
+        view: null,
         blocks: []
     };
 

@@ -29,7 +29,7 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
                     this.model = {
                         isSingleBlock: false,
                         blocks: [],
-                        block: {}
+                        block: null
                     };
                 }
                 BlocksComponent.prototype.ngOnInit = function () {

@@ -37,7 +37,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                     this.model = {
                         isSingleView: false,
                         views: [],
-                        view: {},
+                        view: null,
                         blocks: []
                     };
                 }

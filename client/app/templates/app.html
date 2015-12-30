@@ -1,7 +1,12 @@
 <div class="menuBar">
-    <a [routerLink]="['Main']">Main</a>
-    <a [routerLink]="['Views']">Views</a>
-    <a [routerLink]="['Blocks']">Blocks</a>
+    <span class="menuItem"><a>Users</a></span>
+    <span class="menuItem"><a [routerLink]="['Views']">Views</a></span>
+    <span class="menuItem"><a [routerLink]="['Blocks']">Blocks</a></span>
+    <span class="menuItem"><a>Posts</a></span>
+    <span class="menuItem"><a>Styles</a></span>
+    <span class="menuItem"><a>Scripts</a></span>
+    <span class="menuItem"><a>Settings</a></span>
+    <span class="menuItem"><a>Media</a></span>
 </div>
 
 <router-outlet></router-outlet>

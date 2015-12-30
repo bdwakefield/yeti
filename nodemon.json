@@ -1,4 +1,10 @@
 {
   "verbose": true,
-  "ignore": ["client/*", "node_modules/*"]
+  "ignore": [
+    "client",
+    "node_modules",
+    ".idea",
+    "server/styles",
+    "tests"
+  ]
 }

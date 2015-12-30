@@ -29,6 +29,7 @@ var inq = require('inquirer');
 var favicon = require('serve-favicon');
 var _ = require('lodash');
 var Q = require('q');
+var sassMiddleware = require('node-sass-middleware');
 var routes = require('./server/routes/index');
 var admin = require('./server/routes/admin');
 var users = require('./server/routes/user');
@@ -119,6 +120,15 @@ function startServer() {
     app.use(cookieParser());
 
     //app.use(favicon(path.join(__dirname, 'client', 'images', 'favicon.ico')));
+
+    app.use(sassMiddleware({
+        src: path.join(__dirname, 'server/styles'),
+        dest: path.join(__dirname, 'client/app/styles'),
+        outputStyle: 'compressed',
+        indentedSyntax: true,
+        //debug: true,
+        prefix:  '/app/styles'
+    }));
 
     app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
     app.use('/admin', admin);

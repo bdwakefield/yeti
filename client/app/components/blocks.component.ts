@@ -19,7 +19,7 @@ export class BlocksComponent {
     model = {
         isSingleBlock: false,
         blocks: [],
-        block: {}
+        block: null
     };
 
     ngOnInit() {
