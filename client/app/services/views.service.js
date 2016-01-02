@@ -35,6 +35,13 @@ System.register(['angular2/core', "../services/api.service"], function(exports_1
                     this.cache.view = (this.cache.view && this.cache.view.id === id) ? this.cache.view : this.api.get('/api/views/edit/' + id);
                     return this.cache.view;
                 };
+                ViewsService.prototype.makeDefault = function (id) {
+                    this.cache.views = null;
+                    this.cache.view = null;
+                    return this.api.post('/api/views/makeDefault', {
+                        viewId: id
+                    });
+                };
                 ViewsService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [api_service_1.ApiService])

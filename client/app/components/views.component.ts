@@ -4,11 +4,13 @@ import {HTTP_PROVIDERS, Http, Request, RequestMethod, Headers} from 'angular2/ht
 import {ApiService} from '../services/api.service';
 import {ViewsService} from '../services/views.service';
 import {BlocksService} from '../services/blocks.service';
+import {ViewsToolbarComponent} from './views-toolbar.component';
 
 @Component({
     templateUrl: 'app/templates/views.html',
     directives: [
-        ROUTER_DIRECTIVES
+        ROUTER_DIRECTIVES,
+        ViewsToolbarComponent
     ]
 })
 
@@ -17,22 +19,23 @@ export class ViewsComponent {
         public http:Http,
         public views:ViewsService,
         public routeParams:RouteParams,
-        public blocksService:BlocksService
+        public blocksService:BlocksService,
+        public parentRouter:Router
     ) {}
 
     model = {
         isSingleView: false,
         views: [],
         view: null,
+        selectedView: '',
         blocks: []
     };
 
     ngOnInit() {
         var viewId = this.routeParams.params.id;
+        this.model.selectedView = viewId;
 
         if (viewId) {
-            this.model.isSingleView = true;
-
             this.views.getView(viewId).then(view => view)
             .then(view => {
                 this.blocksService.getBlocks()
@@ -47,9 +50,14 @@ export class ViewsComponent {
                 });
             });
         } else {
-            this.model.isSingleView = false;
-            this.views.getViews().then(views => this.model.views = views);
+            this.views.getViews().then(views => {
+                this.parentRouter.navigateByUrl('/admin/views/' + this.getDefaultView(views).id || views[0].id);
+            });
         }
+    }
+
+    getDefaultView(views) {
+        return _.find(views, view => view.defaultView);
     }
 
     insertBlockContent(view, blocks) {

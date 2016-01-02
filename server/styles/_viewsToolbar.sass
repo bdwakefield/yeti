@@ -1,0 +1,28 @@
+@import colors
+@import fonts
+@import spacing
+@import animations
+@import forms
+
+viewsToolbar
+  position: fixed
+  display: flex
+  top: $viewsToolbar
+  left: 0
+  width: 100%
+  padding: $menuPadding
+  height: $menuHeight
+  line-height: $menuHeight
+  background-color: $bgColor3
+  color: $foreColor
+  border-bottom: 1px $bgColor2 solid
+  select
+    font: $paragraphLight
+    padding: 15px
+    cursor: pointer
+    @include formSelectRounded
+    &:hover
+      background-color: darken($bgColor3, 10%)
+      @include inputHoverFade
+  button
+    @include lightRoundedButtonSmall

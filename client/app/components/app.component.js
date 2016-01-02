@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', './main.component', './login.component', '../services/logger.service', 'rxjs/add/operator/map', "../services/auth.service", "../directives/auth-router-outlet.directive", "./views.component", "../services/api.service", "../services/views.service", "../services/blocks.service", "../services/template.service", "./blocks.component"], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', './main.component', './login.component', '../services/logger.service', "../services/auth.service", "../directives/auth-router-outlet.directive", "./views.component", "../services/api.service", "../services/views.service", "../services/blocks.service", "../services/template.service", "./blocks.component", 'rxjs/add/operator/map'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -27,7 +27,6 @@ System.register(['angular2/core', 'angular2/router', './main.component', './logi
             function (logger_service_1_1) {
                 logger_service_1 = logger_service_1_1;
             },
-            function (_1) {},
             function (auth_service_1_1) {
                 auth_service_1 = auth_service_1_1;
             },
@@ -51,7 +50,8 @@ System.register(['angular2/core', 'angular2/router', './main.component', './logi
             },
             function (blocks_component_1_1) {
                 blocks_component_1 = blocks_component_1_1;
-            }],
+            },
+            function (_1) {}],
         execute: function() {
             AppComponent = (function () {
                 function AppComponent() {

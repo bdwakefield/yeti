@@ -1,9 +1,5 @@
-<div *ngIf="!model.isSingleView">
-    <ul>
-        <li *ngFor="#view of model.views"><a [routerLink]="['Views', {id:view.id}]">{{view.title}}</a></li>
-    </ul>
-</div>
+<viewsToolbar currentView="{{model.selectedView}}"></viewsToolbar>
 
-<div *ngIf="model.isSingleView">
+<div *ngIf="model.view">
     <div [innerHTML]="model.view"></div>
 </div>

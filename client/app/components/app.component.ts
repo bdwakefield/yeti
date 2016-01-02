@@ -3,15 +3,16 @@ import {RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import {MainComponent} from './main.component';
 import {LoginComponent} from './login.component';
 import {LoggerService} from '../services/logger.service';
-import 'rxjs/add/operator/map';
 import {AuthService} from "../services/auth.service";
 import {AuthRouterOutletDirective} from "../directives/auth-router-outlet.directive";
 import {ViewsComponent} from "./views.component";
+import {ViewsToolbarComponent} from "./views-toolbar.component";
 import {ApiService} from "../services/api.service";
 import {ViewsService} from "../services/views.service";
 import {BlocksService} from "../services/blocks.service";
 import {TemplateService} from "../services/template.service";
 import {BlocksComponent} from "./blocks.component";
+import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'yeti',

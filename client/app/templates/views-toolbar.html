@@ -1,0 +1,9 @@
+<div>
+    Select a view
+    <select [ngModel]="model.selectedView" (ngModelChange)="gotoView($event)">
+        <option *ngFor="#view of model.views" [value]="view.id" >{{view.title}}</option>
+    </select>
+
+    <button [hidden]="model.view.defaultView" (click)="makeDefault()">Make Default</button>
+    <span [hidden]="!model.view.defaultView"><i class="fa fa-check-square"></i> Default View</span>
+</div>

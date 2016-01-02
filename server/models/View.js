@@ -121,6 +121,18 @@ View.addView = function(viewName) {
     return view.save();
 };
 
+View.makeDefault = function(viewId) {
+    return clearAllDefaultViews(true).then(function() {
+        return View.findOneAndUpdate({
+            _id: viewId
+        },{
+            $set: {
+                default: true
+            }
+        }).exec();
+    });
+};
+
 View.deleteView = function(viewId) {
     return View.find({_id:viewId}).remove().then(function(result) {
         cache.flush();

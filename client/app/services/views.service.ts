@@ -21,4 +21,12 @@ export class ViewsService {
         this.cache.view = (this.cache.view && this.cache.view.id === id) ? this.cache.view : this.api.get('/api/views/edit/' + id);
         return this.cache.view;
     }
+
+    makeDefault(id) {
+        this.cache.views = null;
+        this.cache.view = null;
+        return this.api.post('/api/views/makeDefault', {
+            viewId: id
+        });
+    }
 }

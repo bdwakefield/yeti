@@ -45,8 +45,6 @@
     "zone.js": "0.5.10"
   },
   "devDependencies": {
-    "angular": "^1.4.7",
-    "angular-mocks": "^1.4.7",
     "coveralls": "^2.11.4",
     "gulp-istanbul": "^0.10.2",
     "gulp-mocha": "^2.1.3",

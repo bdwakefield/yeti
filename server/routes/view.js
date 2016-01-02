@@ -49,6 +49,12 @@ router.post('/addView', function(req, res) {
     });
 });
 
+router.post('/makeDefault', function(req, res) {
+    View.makeDefault(req.body.viewId).then(function(result) {
+        res.json(204);
+    });
+});
+
 router.post('/deleteView', function(req, res) {
     View.deleteView(req.body.viewId).then(function (result) {
         res.json(result);

@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', 'angular2/http', '../services/views.service', '../services/blocks.service'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', 'angular2/http', '../services/views.service', '../services/blocks.service', './views-toolbar.component'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, http_1, views_service_1, blocks_service_1;
+    var core_1, router_1, http_1, views_service_1, blocks_service_1, views_toolbar_component_1;
     var ViewsComponent;
     return {
         setters:[
@@ -26,26 +26,31 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
             },
             function (blocks_service_1_1) {
                 blocks_service_1 = blocks_service_1_1;
+            },
+            function (views_toolbar_component_1_1) {
+                views_toolbar_component_1 = views_toolbar_component_1_1;
             }],
         execute: function() {
             ViewsComponent = (function () {
-                function ViewsComponent(http, views, routeParams, blocksService) {
+                function ViewsComponent(http, views, routeParams, blocksService, parentRouter) {
                     this.http = http;
                     this.views = views;
                     this.routeParams = routeParams;
                     this.blocksService = blocksService;
+                    this.parentRouter = parentRouter;
                     this.model = {
                         isSingleView: false,
                         views: [],
                         view: null,
+                        selectedView: '',
                         blocks: []
                     };
                 }
                 ViewsComponent.prototype.ngOnInit = function () {
                     var _this = this;
                     var viewId = this.routeParams.params.id;
+                    this.model.selectedView = viewId;
                     if (viewId) {
-                        this.model.isSingleView = true;
                         this.views.getView(viewId).then(function (view) { return view; })
                             .then(function (view) {
                             _this.blocksService.getBlocks()
@@ -61,9 +66,13 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                         });
                     }
                     else {
-                        this.model.isSingleView = false;
-                        this.views.getViews().then(function (views) { return _this.model.views = views; });
+                        this.views.getViews().then(function (views) {
+                            _this.parentRouter.navigateByUrl('/admin/views/' + _this.getDefaultView(views).id || views[0].id);
+                        });
                     }
+                };
+                ViewsComponent.prototype.getDefaultView = function (views) {
+                    return _.find(views, function (view) { return view.defaultView; });
                 };
                 ViewsComponent.prototype.insertBlockContent = function (view, blocks) {
                     var _this = this;
@@ -91,10 +100,11 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                     core_1.Component({
                         templateUrl: 'app/templates/views.html',
                         directives: [
-                            router_1.ROUTER_DIRECTIVES
+                            router_1.ROUTER_DIRECTIVES,
+                            views_toolbar_component_1.ViewsToolbarComponent
                         ]
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http, views_service_1.ViewsService, router_1.RouteParams, blocks_service_1.BlocksService])
+                    __metadata('design:paramtypes', [http_1.Http, views_service_1.ViewsService, router_1.RouteParams, blocks_service_1.BlocksService, router_1.Router])
                 ], ViewsComponent);
                 return ViewsComponent;
             })();
