@@ -32,23 +32,27 @@ export class ViewsComponent {
     };
 
     ngOnInit() {
+        this.initialize();
+    }
+
+    initialize() {
         var viewId = this.routeParams.params.id;
         this.model.selectedView = viewId;
 
         if (viewId) {
             this.views.getView(viewId).then(view => view)
-            .then(view => {
-                this.blocksService.getBlocks()
-                .then(blocks => {
-                    this.model.blocks = blocks;
-                    if (~view.content.indexOf('{{')) {
-                        this.insertBlockContent(view.content, this.model.blocks)
-                            .then(modifiedView => {
-                                this.model.view = modifiedView
-                            });
-                    }
+                .then(view => {
+                    this.blocksService.getBlocks()
+                        .then(blocks => {
+                            this.model.blocks = blocks;
+                            if (~view.content.indexOf('{{')) {
+                                this.insertBlockContent(view.content, this.model.blocks)
+                                    .then(modifiedView => {
+                                        this.model.view = modifiedView
+                                    });
+                            }
+                        });
                 });
-            });
         } else {
             this.views.getViews().then(views => {
                 this.parentRouter.navigateByUrl('/admin/views/' + this.getDefaultView(views).id || views[0].id);

@@ -23,6 +23,7 @@ export class ViewsToolbarComponent {
         view: {},
         isDefaultView: false,
         selectedView: null,
+        addViewName: null,
         blocks: []
     };
 
@@ -40,6 +41,10 @@ export class ViewsToolbarComponent {
 
     gotoView(event) {
         this.parentRouter.navigateByUrl('/admin/views/' + event);
+    }
+
+    addView() {
+        this.views.addView(this.model.addViewName).then(result => this.initialize());
     }
 
     makeDefault() {

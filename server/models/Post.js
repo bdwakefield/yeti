@@ -34,7 +34,7 @@ Post.getAllPosts = function() {
         return Q(cachedPosts);
     } else {
         Post.find({}).sort({'date.modified': 'desc'}).lean().exec(function (err, posts) {
-            if (err) return err;
+            if (err) deferred.reject(err);
 
             User.find().lean().exec(function (err, users) {
                 if (err) return err;

@@ -81,6 +81,8 @@ Block.getBlock = (block, params) => {
                                 post: params.post
                             }
                         });
+                    }).catch(err => {
+                        reject(err);
                     });
                 } else {
                     var bodyContent = widgetify(result) || {body: {content: '<h3>Block ' + block + ' is missing.</h3>'}};

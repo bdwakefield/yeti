@@ -72,8 +72,13 @@ View.getDefaultViewId = function() {
             if (err) console.log(err);
 
             if (result) {
-                cache.set('defaultViewId', result._id.toString());
-                deferred.resolve(result._id.toString());
+                var defaultID = result._id.toString();
+                if (mongoose.Types.ObjectId.isValid(defaultID)) {
+                    cache.set('defaultViewId', defaultID);
+                    deferred.resolve(result._id.toString());
+                } else {
+                    deferred.reject('Not a valid ObjectID: ' + defaultID);
+                }
             } else {
                 deferred.resolve(null);
             }
@@ -123,6 +128,7 @@ View.addView = function(viewName) {
 
 View.makeDefault = function(viewId) {
     return clearAllDefaultViews(true).then(function() {
+        cache.flush();
         return View.findOneAndUpdate({
             _id: viewId
         },{
@@ -180,7 +186,6 @@ function updateView(viewId, viewContent, viewRoute, viewIsDefault) {
 }
 
 function parseView(content, params) {
-    var deferred = Q.defer();
     var promises = [];
     var filteredBlogsShown = false;
 
@@ -188,34 +193,33 @@ function parseView(content, params) {
 
     var matches = content.match(reg);
 
-    if (matches) {
-        matches.forEach(function (match) {
-            var innerDeferred = Q.defer();
-            var blockId = match.replace(/\{\{\-|\}\}/g, '');
-            blocks.getBlock(blockId, params).then(function (result) {
-                // The following safeguards against blog post blocks posting for every single one on the page in the case of a filter selected by the user
-                // ie: There are 4 blog post blocks on the post and user clicks a category, this prevents it from showing matching posts times four
-                if (
-                    (result.type !== 'blog') ||
-                    (params && params.action === 'blog' && result.type === 'blog' && !filteredBlogsShown) ||
-                    (params && params.action !== 'blog')
-                ) {
-                    filteredBlogsShown = (params && params.action === 'blog' && result.type === 'blog');
-                    innerDeferred.resolve(result);
-                } else {
-                    innerDeferred.resolve();
-                }
+    return new Promise((resolve, reject) => {
+        if (matches) {
+            matches.forEach(function (match) {
+                var blockId = match.replace(/\{\{\-|\}\}/g, '');
+                promises.push(new Promise((resolve, reject) => {
+                    blocks.getBlock(blockId, params).then(function (result) {
+                        // The following safeguards against blog post blocks posting for every single one on the page in the case of a filter selected by the user
+                        // ie: There are 4 blog post blocks on the post and user clicks a category, this prevents it from showing matching posts times four
+                        if (
+                            (result.type !== 'blog') ||
+                            (params && params.action === 'blog' && result.type === 'blog' && !filteredBlogsShown) ||
+                            (params && params.action !== 'blog')
+                        ) {
+                            filteredBlogsShown = (params && params.action === 'blog' && result.type === 'blog');
+                            resolve(result);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }));
             });
-            promises.push(innerDeferred.promise);
-        });
 
-        Q.all(promises).then(function (result) {
-            deferred.resolve(_(result).omit(_.isUndefined).value());
-        });
-    } else {
-        deferred.resolve(content);
-    }
-    return deferred.promise;
+            Promise.all(promises).then(result => resolve(result));
+        } else {
+            resolve(content);
+        }
+    });
 }
 
 module.exports = View;

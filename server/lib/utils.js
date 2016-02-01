@@ -53,7 +53,7 @@ utils.buildPage = (viewId, params) => {
         var styleContent = '<style>';
         var linkContent = '';
         _.each(result, style => {
-            if (style.enabled && ~style.appliedTo.indexOf(viewId.toString())) {
+            if (style.enabled && style.appliedTo && ~style.appliedTo.indexOf(viewId.toString())) {
                 var code = style.content;
 
                 if (style.type === 'code') {
@@ -74,7 +74,7 @@ utils.buildPage = (viewId, params) => {
             var codeContent = '<script>';
             var linkContent = '';
             _.each(result, script => {
-                if (script.enabled && ~script.appliedTo.indexOf(viewId.toString())) {
+                if (script.enabled && script.appliedTo && ~script.appliedTo.indexOf(viewId.toString())) {
                     var code = script.content;
 
                     if (script.type === 'code') {

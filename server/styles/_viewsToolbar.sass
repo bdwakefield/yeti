@@ -24,5 +24,16 @@ viewsToolbar
     &:hover
       background-color: darken($bgColor3, 10%)
       @include inputHoverFade
+  input
+    font: $paragraphLight
+    padding: 5px
+    cursor: text
+    @include formInputRounded
+    &:hover
+      background-color: darken($bgColor3, 10%)
+      @include inputHoverFade
   button
     @include lightRoundedButtonSmall
+  .viewsToolbarItem
+    flex-grow: 1
+    text-align: center

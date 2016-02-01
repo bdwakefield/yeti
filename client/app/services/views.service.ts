@@ -29,4 +29,10 @@ export class ViewsService {
             viewId: id
         });
     }
+
+    addView(viewName) {
+        return this.api.post('/api/views/addView', {
+            viewName: viewName
+        });
+    }
 }
