@@ -2,35 +2,49 @@ import {Component} from 'angular2/core';
 import {Router, RouteConfig, RouteParams, ROUTER_DIRECTIVES, RouterLink} from 'angular2/router';
 import {ApiService} from "../services/api.service";
 import {BlocksService} from "../services/blocks.service";
+import {BlocksToolbarComponent} from './blocks-toolbar.component';
 
 @Component({
     templateUrl: 'app/templates/blocks.html',
     directives: [
-        ROUTER_DIRECTIVES
+        ROUTER_DIRECTIVES,
+        BlocksToolbarComponent
     ]
 })
 
 export class BlocksComponent {
     constructor(
-        public blocks:BlocksService,
-        public routeParams:RouteParams
+        public blocksService:BlocksService
     ) {}
 
     model = {
         isSingleBlock: false,
         blocks: [],
-        block: null
+        block: null,
+        selectedBlock: ''
     };
 
     ngOnInit() {
-        var blockId = this.routeParams.params.id;
+        this.initialize();
+    }
+
+    initialize() {
+        var blockId = this.model.selectedBlock;
 
         if (blockId) {
-            this.model.isSingleBlock = true;
-            this.blocks.getBlock(this.routeParams.params.id).then(block => this.model.block = block.content);
+            this.blocksService.getBlock(blockId).then(block => {
+                this.model.block = block;
+            });
         } else {
-            this.model.isSingleBlock = false;
-            this.blocks.getBlocks().then(blocks => this.model.blocks = blocks);
+            this.blocksService.getBlocks().then(blocks => {
+                this.model.selectedBlock = blocks[0]._id;
+                this.initialize();
+            });
         }
+    }
+
+    changeBlock(event) {
+        this.model.selectedBlock = event;
+        this.initialize();
     }
 }

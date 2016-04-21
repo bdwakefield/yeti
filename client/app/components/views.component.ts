@@ -18,9 +18,7 @@ export class ViewsComponent {
     constructor(
         public http:Http,
         public views:ViewsService,
-        public routeParams:RouteParams,
-        public blocksService:BlocksService,
-        public parentRouter:Router
+        public blocksService:BlocksService
     ) {}
 
     model = {
@@ -36,8 +34,7 @@ export class ViewsComponent {
     }
 
     initialize() {
-        var viewId = this.routeParams.params.id;
-        this.model.selectedView = viewId;
+        var viewId = this.model.selectedView;
 
         if (viewId) {
             this.views.getView(viewId).then(view => view)
@@ -50,14 +47,22 @@ export class ViewsComponent {
                                     .then(modifiedView => {
                                         this.model.view = modifiedView
                                     });
+                            } else {
+                                this.model.view = 'Please add a block from above to get started.';
                             }
                         });
                 });
         } else {
             this.views.getViews().then(views => {
-                this.parentRouter.navigateByUrl('/admin/views/' + this.getDefaultView(views).id || views[0].id);
+                this.model.selectedView = this.getDefaultView(views).id || views[0].id;
+                this.initialize();
             });
         }
+    }
+
+    changeView(event) {
+        this.model.selectedView = event;
+        this.initialize();
     }
 
     getDefaultView(views) {
@@ -86,5 +91,9 @@ export class ViewsComponent {
                     resolve(modifiedView);
                 });
         });
+    }
+
+    deleteBlock(viewId) {
+        console.log(viewId);
     }
 }

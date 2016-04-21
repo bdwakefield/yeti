@@ -1,0 +1,6 @@
+<div class="blocksToolbarItem">
+    Select a block
+    <select [ngModel]="model.selectedBlock" (ngModelChange)="gotoBlock($event)">
+        <option *ngFor="#block of model.blocks" [value]="block._id">{{block.title}}</option>
+    </select>
+</div>

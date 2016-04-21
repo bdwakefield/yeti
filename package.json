@@ -8,13 +8,14 @@
     "test": "istanbul cover -x '**/client/**' ./node_modules/mocha/bin/_mocha ./test/server/** --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
-    "angular2": "2.0.0-beta.0",
+    "angular2": "2.0.0-beta.3",
     "bcrypt": "^0.8.3",
     "body-parser": "~1.14.1",
     "bower": "^1.5.3",
     "clean-css": "^3.3.6",
     "compression": "^1.5.0",
     "cookie-parser": "~1.4.0",
+    "cors": "^2.7.1",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
     "express": "~4.13.3",
@@ -29,6 +30,7 @@
     "istanbul": "^0.4.0",
     "jade": "^1.9.2",
     "jsonwebtoken": "^5.0.2",
+    "kerberos": "^0.0.18",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "mongodb": "^2.0.33",
@@ -41,8 +43,8 @@
     "rxjs": "5.0.0-beta.0",
     "serve-favicon": "^2.3.0",
     "sinon": "^1.17.2",
-    "systemjs": "0.19.6",
-    "zone.js": "0.5.10"
+    "systemjs": "0.19.9",
+    "zone.js": "^0.5.13"
   },
   "devDependencies": {
     "coveralls": "^2.11.4",

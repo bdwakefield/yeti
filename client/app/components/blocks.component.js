@@ -1,16 +1,14 @@
-System.register(['angular2/core', 'angular2/router', "../services/blocks.service"], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', "../services/blocks.service", './blocks-toolbar.component'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
-        switch (arguments.length) {
-            case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-            case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
-            case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
-        }
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, blocks_service_1;
+    var core_1, router_1, blocks_service_1, blocks_toolbar_component_1;
     var BlocksComponent;
     return {
         setters:[
@@ -22,38 +20,52 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
             },
             function (blocks_service_1_1) {
                 blocks_service_1 = blocks_service_1_1;
+            },
+            function (blocks_toolbar_component_1_1) {
+                blocks_toolbar_component_1 = blocks_toolbar_component_1_1;
             }],
         execute: function() {
             BlocksComponent = (function () {
-                function BlocksComponent(blocks, routeParams) {
-                    this.blocks = blocks;
-                    this.routeParams = routeParams;
+                function BlocksComponent(blocksService) {
+                    this.blocksService = blocksService;
                     this.model = {
                         isSingleBlock: false,
                         blocks: [],
-                        block: null
+                        block: null,
+                        selectedBlock: ''
                     };
                 }
                 BlocksComponent.prototype.ngOnInit = function () {
+                    this.initialize();
+                };
+                BlocksComponent.prototype.initialize = function () {
                     var _this = this;
-                    var blockId = this.routeParams.params.id;
+                    var blockId = this.model.selectedBlock;
                     if (blockId) {
-                        this.model.isSingleBlock = true;
-                        this.blocks.getBlock(this.routeParams.params.id).then(function (block) { return _this.model.block = block.content; });
+                        this.blocksService.getBlock(blockId).then(function (block) {
+                            _this.model.block = block;
+                        });
                     }
                     else {
-                        this.model.isSingleBlock = false;
-                        this.blocks.getBlocks().then(function (blocks) { return _this.model.blocks = blocks; });
+                        this.blocksService.getBlocks().then(function (blocks) {
+                            _this.model.selectedBlock = blocks[0]._id;
+                            _this.initialize();
+                        });
                     }
+                };
+                BlocksComponent.prototype.changeBlock = function (event) {
+                    this.model.selectedBlock = event;
+                    this.initialize();
                 };
                 BlocksComponent = __decorate([
                     core_1.Component({
                         templateUrl: 'app/templates/blocks.html',
                         directives: [
-                            router_1.ROUTER_DIRECTIVES
+                            router_1.ROUTER_DIRECTIVES,
+                            blocks_toolbar_component_1.BlocksToolbarComponent
                         ]
                     }), 
-                    __metadata('design:paramtypes', [blocks_service_1.BlocksService, router_1.RouteParams])
+                    __metadata('design:paramtypes', [blocks_service_1.BlocksService])
                 ], BlocksComponent);
                 return BlocksComponent;
             })();

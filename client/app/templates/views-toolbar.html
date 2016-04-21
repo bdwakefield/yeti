@@ -1,8 +1,16 @@
 <div class="viewsToolbarItem">
     Select a view
     <select [ngModel]="model.selectedView" (ngModelChange)="gotoView($event)">
-        <option *ngFor="#view of model.views" [value]="view.id" >{{view.title}}</option>
+        <option *ngFor="#view of model.views" [value]="view.id">{{view.title}}</option>
     </select>
+</div>
+
+<div class="viewsToolbarItem">
+    Select a block
+    <select [(ngModel)]="model.selectedBlock">
+        <option *ngFor="#block of model.blocks" [value]="block._id" >{{block.title}}</option>
+    </select>
+    <button (click)="addBlock()">Add block</button>
 </div>
 
 <div class="viewsToolbarItem">
@@ -11,5 +19,13 @@
 </div>
 
 <div class="viewsToolbarItem">
-    <span>View name <input type="text" [(ngModel)]="model.addViewName"><button type="submit" (click)="addView()">Add View</button></span>
+    <span><input type="text" [(ngModel)]="model.addViewName"><button type="submit" (click)="addView()">Add View</button></span>
+</div>
+
+<div class="viewsToolbarItem">
+    <button (click)="saveView()">Save View</button>
+</div>
+
+<div class="viewsToolbarItem">
+    <button (click)="deleteView()">Delete View</button>
 </div>

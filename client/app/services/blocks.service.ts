@@ -8,18 +8,17 @@ export class BlocksService {
     ) {}
 
     cache = {
-        blockPromise: undefined
+        blocks: undefined,
+        block: undefined
     };
 
     getBlock(id) {
-        return new Promise((resolve, reject) => {
-            this.cache.blockPromise = this.cache.blockPromise || this.api.get('/api/blocks');
-            this.cache.blockPromise.then(blocks => resolve(blocks.find(block => block._id === id)));
-        });
+        this.cache.block = (this.cache.block && this.cache.block.id === id) ? this.cache.block : this.api.get('/api/blocks/' + id);
+        return this.cache.block;
     }
 
-    getBlocks() {
-        this.cache.blockPromise = this.cache.blockPromise || this.api.get('/api/blocks');
-        return this.cache.blockPromise;
+    getBlocks(bustCache) {
+        this.cache.blocks = (this.cache.blocks && !bustCache) ? this.cache.blocks : this.api.get('/api/blocks');
+        return this.cache.blocks;
     }
 }

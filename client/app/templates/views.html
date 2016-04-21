@@ -1,5 +1,5 @@
-<viewsToolbar currentView="{{model.selectedView}}"></viewsToolbar>
+<viewsToolbar currentView="{{model.selectedView}}" (viewChanged)="changeView($event)"></viewsToolbar>
 
 <div *ngIf="model.view">
-    <div [innerHTML]="model.view"></div>
+    <div id="viewEditor" [innerHTML]="model.view"></div>
 </div>

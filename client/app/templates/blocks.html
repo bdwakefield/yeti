@@ -1,9 +1,5 @@
-<div *ngIf="!model.isSingleBlock">
-    <ul>
-        <li *ngFor="#block of model.blocks"><a [routerLink]="['Blocks', {id:block._id}]">{{block.title}}</a></li>
-    </ul>
-</div>
+<blocksToolbar currentBlock="{{model.selectedBlock}}" (blockChanged)="changeBlock($event)"></blocksToolbar>
 
-<div *ngIf="model.isSingleBlock">
-    <div [innerHTML]="model.block"></div>
+<div *ngIf="model.block">
+    <div id="blockEditor" [innerHTML]="model.block.content"></div>
 </div>

@@ -12,8 +12,8 @@ export class ViewsService {
         view: undefined
     };
 
-    getViews() {
-        this.cache.views = this.cache.views || this.api.get('/api/views/edit');
+    getViews(bustCache) {
+        this.cache.views = (this.cache.views && !bustCache) ? this.cache.views : this.api.get('/api/views/edit');
         return this.cache.views;
     }
 
@@ -33,6 +33,21 @@ export class ViewsService {
     addView(viewName) {
         return this.api.post('/api/views/addView', {
             viewName: viewName
+        });
+    }
+
+    postView(viewId, viewContent, viewRoute, viewIsDefault) {
+        return this.api.post('/api/views', {
+            viewId: viewId,
+            viewContent: viewContent,
+            viewRoute: viewRoute,
+            viewIsDefault: viewIsDefault
+        });
+    }
+
+    deleteView(viewId) {
+        return this.api.post('/api/views/deleteView', {
+            viewId: viewId
         });
     }
 }
