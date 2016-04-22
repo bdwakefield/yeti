@@ -15,10 +15,9 @@ export class BlocksToolbarComponent {
     @Input() currentBlock: string;
     constructor(
         public blocks:BlocksService
-    ) {
-        this.blockChanged = new EventEmitter();
-    }
+    ) {}
 
+    blockChanged = new EventEmitter();
     model = {
         block: {},
         blocks: [],
@@ -27,7 +26,7 @@ export class BlocksToolbarComponent {
     };
 
     ngOnInit() {
-        this.initialize();
+        this.initialize(null);
     }
 
     initialize(blockId) {
@@ -41,14 +40,14 @@ export class BlocksToolbarComponent {
                 this.model.selectedBlock = this.currentBlock;
             }
 
-            this.model.block = _.find(blocks, block => block._id === this.model.selectedBlock);
+            this.model.block = blocks.find(block => block._id === this.model.selectedBlock);
         });
     }
 
     refresh(blockId) {
         this.currentBlock = this.model.selectedBlock = blockId;
         this.blocks.getBlocks(true).then(blocks => {
-            this.model.block = _.find(blocks, block => block._id === this.model.selectedBlock);
+            this.model.block = blocks.find(block => block._id === this.model.selectedBlock);
         });
     }
 

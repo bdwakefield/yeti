@@ -26,8 +26,9 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
             }],
         execute: function() {
             BlocksComponent = (function () {
-                function BlocksComponent(blocksService) {
+                function BlocksComponent(blocksService, routeParams) {
                     this.blocksService = blocksService;
+                    this.routeParams = routeParams;
                     this.model = {
                         isSingleBlock: false,
                         blocks: [],
@@ -40,6 +41,7 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
                 };
                 BlocksComponent.prototype.initialize = function () {
                     var _this = this;
+                    this.model.selectedBlock = this.model.selectedBlock || this.routeParams.get('blockId');
                     var blockId = this.model.selectedBlock;
                     if (blockId) {
                         this.blocksService.getBlock(blockId).then(function (block) {
@@ -47,7 +49,7 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
                         });
                     }
                     else {
-                        this.blocksService.getBlocks().then(function (blocks) {
+                        this.blocksService.getBlocks(null).then(function (blocks) {
                             _this.model.selectedBlock = blocks[0]._id;
                             _this.initialize();
                         });
@@ -65,7 +67,7 @@ System.register(['angular2/core', 'angular2/router', "../services/blocks.service
                             blocks_toolbar_component_1.BlocksToolbarComponent
                         ]
                     }), 
-                    __metadata('design:paramtypes', [blocks_service_1.BlocksService])
+                    __metadata('design:paramtypes', [blocks_service_1.BlocksService, router_1.RouteParams])
                 ], BlocksComponent);
                 return BlocksComponent;
             })();

@@ -32,10 +32,11 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
             }],
         execute: function() {
             ViewsComponent = (function () {
-                function ViewsComponent(http, views, blocksService) {
+                function ViewsComponent(http, views, blocksService, router) {
                     this.http = http;
                     this.views = views;
                     this.blocksService = blocksService;
+                    this.router = router;
                     this.model = {
                         isSingleView: false,
                         views: [],
@@ -80,7 +81,7 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                     this.initialize();
                 };
                 ViewsComponent.prototype.getDefaultView = function (views) {
-                    return _.find(views, function (view) { return view.defaultView; });
+                    return views.find(function (view) { return view.defaultView; });
                 };
                 ViewsComponent.prototype.insertBlockContent = function (view, blocks) {
                     var _this = this;
@@ -104,8 +105,29 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                         });
                     });
                 };
-                ViewsComponent.prototype.deleteBlock = function (viewId) {
-                    console.log(viewId);
+                ViewsComponent.prototype.handleClick = function (element) {
+                    var srcElement = element.srcElement;
+                    var action = srcElement.getAttribute('action');
+                    var blockId = srcElement.getAttribute('block');
+                    switch (action) {
+                        case 'delete':
+                            this.deleteBlock(blockId);
+                            break;
+                        case 'edit':
+                            this.editBlock(blockId);
+                            break;
+                        default:
+                            console.log('Method ' + action + ' is not uderstood.');
+                            break;
+                    }
+                };
+                ViewsComponent.prototype.deleteBlock = function (blockId) {
+                    console.log(blockId);
+                };
+                ViewsComponent.prototype.editBlock = function (blockId) {
+                    this.router.navigate(['Blocks', {
+                            blockId: blockId
+                        }]);
                 };
                 ViewsComponent = __decorate([
                     core_1.Component({
@@ -113,9 +135,12 @@ System.register(['angular2/core', 'angular2/router', 'angular2/http', '../servic
                         directives: [
                             router_1.ROUTER_DIRECTIVES,
                             views_toolbar_component_1.ViewsToolbarComponent
-                        ]
+                        ],
+                        host: {
+                            '(document: click)': 'handleClick($event)'
+                        }
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http, views_service_1.ViewsService, blocks_service_1.BlocksService])
+                    __metadata('design:paramtypes', [http_1.Http, views_service_1.ViewsService, blocks_service_1.BlocksService, router_1.Router])
                 ], ViewsComponent);
                 return ViewsComponent;
             })();

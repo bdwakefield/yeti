@@ -20,10 +20,9 @@ export class ViewsToolbarComponent {
     constructor(
         public views:ViewsService,
         public blocks:BlocksService
-    ) {
-        this.viewChanged = new EventEmitter();
-    }
+    ) {}
 
+    viewChanged = new EventEmitter();
     model = {
         isSingleView: false,
         views: [],
@@ -36,7 +35,7 @@ export class ViewsToolbarComponent {
     };
 
     ngOnInit() {
-        this.initialize();
+        this.initialize(null);
     }
 
     initialize(viewId) {
@@ -50,8 +49,8 @@ export class ViewsToolbarComponent {
                 this.model.selectedView = this.currentView;
             }
 
-            this.model.view = _.find(views, view => view.id === this.model.selectedView);
-            this.blocks.getBlocks().then(blocks => {
+            this.model.view = views.find(view => view.id === this.model.selectedView);
+            this.blocks.getBlocks(null).then(blocks => {
                 this.model.blocks = blocks;
                 this.model.selectedBlock = blocks[0]._id
             });
@@ -61,7 +60,7 @@ export class ViewsToolbarComponent {
     refresh(viewId) {
         this.currentView = this.model.selectedView = viewId;
         this.views.getViews(true).then(views => {
-            this.model.view = _.find(views, view => view.id === this.model.selectedView);
+            this.model.view = views.find(view => view.id === this.model.selectedView);
         });
     }
 
@@ -102,7 +101,7 @@ export class ViewsToolbarComponent {
 
     getModifiedView() {
         var viewContent = '';
-        _.forEach(document.getElementById('viewEditor').childNodes, function(block) {
+        _.forEach(document.getElementById('viewEditor').childNodes, block => {
             if (block.id) {
                 viewContent += '{{-' + block.id + '}}\n';
             }

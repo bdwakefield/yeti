@@ -11,14 +11,18 @@ import {ViewsToolbarComponent} from './views-toolbar.component';
     directives: [
         ROUTER_DIRECTIVES,
         ViewsToolbarComponent
-    ]
+    ],
+    host: {
+        '(document: click)': 'handleClick($event)'
+    }
 })
 
 export class ViewsComponent {
     constructor(
         public http:Http,
         public views:ViewsService,
-        public blocksService:BlocksService
+        public blocksService:BlocksService,
+        private router:Router
     ) {}
 
     model = {
@@ -66,7 +70,7 @@ export class ViewsComponent {
     }
 
     getDefaultView(views) {
-        return _.find(views, view => view.defaultView);
+        return views.find(view => view.defaultView);
     }
 
     insertBlockContent(view, blocks) {
@@ -93,7 +97,31 @@ export class ViewsComponent {
         });
     }
 
-    deleteBlock(viewId) {
-        console.log(viewId);
+    handleClick(element) {
+        var srcElement = element.srcElement;
+        var action = srcElement.getAttribute('action');
+        var blockId = srcElement.getAttribute('block');
+
+        switch (action) {
+            case 'delete':
+                this.deleteBlock(blockId);
+                break;
+            case 'edit':
+                this.editBlock(blockId);
+                break;
+            default:
+                console.log('Method ' + action + ' is not uderstood.');
+                break;
+        }
+    }
+
+    deleteBlock(blockId) {
+        console.log(blockId);
+    }
+
+    editBlock(blockId) {
+        this.router.navigate(['Blocks', {
+            blockId: blockId
+        }]);
     }
 }

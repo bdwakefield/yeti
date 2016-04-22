@@ -14,7 +14,8 @@ import {BlocksToolbarComponent} from './blocks-toolbar.component';
 
 export class BlocksComponent {
     constructor(
-        public blocksService:BlocksService
+        public blocksService:BlocksService,
+        public routeParams:RouteParams
     ) {}
 
     model = {
@@ -29,6 +30,7 @@ export class BlocksComponent {
     }
 
     initialize() {
+        this.model.selectedBlock = this.model.selectedBlock || this.routeParams.get('blockId');
         var blockId = this.model.selectedBlock;
 
         if (blockId) {
@@ -36,7 +38,7 @@ export class BlocksComponent {
                 this.model.block = block;
             });
         } else {
-            this.blocksService.getBlocks().then(blocks => {
+            this.blocksService.getBlocks(null).then(blocks => {
                 this.model.selectedBlock = blocks[0]._id;
                 this.initialize();
             });

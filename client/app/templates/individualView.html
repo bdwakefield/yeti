@@ -1,7 +1,7 @@
 <div id="<%= blockId %>" class="blockContent" draggable="true" onDragStart="dragStart(this, event)" onDrop="dragDrop(this, event)" onDragOver="dragOver(this, event)" onDragLeave="dragLeave(this, event)">
     <div class="blockControlBox">
-        <i class="block-button btn fa fa-pencil fa-2x" onclick="editBlock('<%= blockId %>')"></i>
-        <i class="block-button btn fa fa-trash-o fa-2x" (click)="deleteBlock('<%= blockId %>')"></i>
+        <i class="block-button btn fa fa-pencil fa-2x" action="edit" block="<%= blockId %>"></i>
+        <i class="block-button btn fa fa-trash-o fa-2x" action="delete" block="<%= blockId %>"></i>
         <div class="block-title"><%= blockTitle %></div>
     </div>
 
